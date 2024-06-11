@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -76,5 +78,10 @@ public class CourseServiceImpl implements CourseService {
                     String.format("teacher id=%d don't have the course to teach", teacherId));
         }
         return courses;
+    }
+
+    @Override
+    public Set<Course> findCoursesByIds(Set<Long> courseIds) {
+        return new HashSet<>(courseRepository.findAllById(courseIds));
     }
 }
