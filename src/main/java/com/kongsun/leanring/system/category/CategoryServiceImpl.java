@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.category;
 
+import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Category not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Category", id));
     }
 
     @Override
