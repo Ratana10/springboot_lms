@@ -1,4 +1,4 @@
-package com.kongsun.leanring.system.category;
+package com.kongsun.leanring.system.schedule;
 
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
@@ -11,24 +11,24 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/v1/schedules")
 @RequiredArgsConstructor
-public class CategoryController {
-    private final CategoryService categoryService;
-    private final CategoryMapper categoryMapper;
+public class ScheduleController {
+    private final ScheduleService scheduleService;
+    private final ScheduleMapper scheduleMapper;
 
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAll() {
-        List<Category> categories = categoryService.getAll();
+        List<Schedule> schedules = scheduleService.getAll();
 
         return ResponseEntity
                 .ok()
                 .body(ApiResponse.builder()
-                        .data(categories.stream()
-                                .map(categoryMapper::toCategoryDTO)
+                        .data(schedules.stream()
+                                .map(scheduleMapper::toScheduleDTO)
                                 .toList())
-                        .message("get categories successfully")
+                        .message("get schedules successfully")
                         .httpStatus(OK.value())
                         .build()
                 );
@@ -36,14 +36,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> create(@RequestBody @Valid CategoryDTO dto) {
-        Category category = categoryMapper.toCategory(dto);
-        category = categoryService.create(category);
+    public ResponseEntity<ApiResponse> create(@RequestBody @Valid ScheduleDTO dto) {
+        Schedule schedule = scheduleMapper.toSchedule(dto);
+        schedule = scheduleService.create(schedule);
         return ResponseEntity
                 .status(CREATED)
                 .body(ApiResponse.builder()
-                        .data(categoryMapper.toCategoryDTO(category))
-                        .message("create category successfully")
+                        .data(scheduleMapper.toScheduleDTO(schedule))
+                        .message("create schedule successfully")
                         .httpStatus(CREATED.value())
                         .build()
                 );
@@ -52,12 +52,12 @@ public class CategoryController {
 
     @GetMapping("{id}")
     public ResponseEntity<ApiResponse> getById(@PathVariable Long id) {
-        Category category = categoryService.getById(id);
+        Schedule schedule = scheduleService.getById(id);
         return ResponseEntity
                 .status(FOUND)
                 .body(ApiResponse.builder()
-                        .data(categoryMapper.toCategoryDTO(category))
-                        .message("get category successfully")
+                        .data(scheduleMapper.toScheduleDTO(schedule))
+                        .message("get schedule successfully")
                         .httpStatus(FOUND.value())
                         .build()
                 );
@@ -65,14 +65,14 @@ public class CategoryController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid CategoryDTO dto) {
-        Category category = categoryMapper.toCategory(dto);
-        category = categoryService.update(id, category);
+    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid ScheduleDTO dto) {
+        Schedule schedule = scheduleMapper.toSchedule(dto);
+        schedule = scheduleService.update(id, schedule);
         return ResponseEntity
                 .ok()
                 .body(ApiResponse.builder()
-                        .data(categoryMapper.toCategoryDTO(category))
-                        .message("update category successfully")
+                        .data(scheduleMapper.toScheduleDTO(schedule))
+                        .message("update schedule successfully")
                         .httpStatus(OK.value())
                         .build()
                 );
@@ -81,15 +81,16 @@ public class CategoryController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse> deleteById(@PathVariable Long id) {
-        categoryService.deleteById(id);
+        scheduleService.deleteById(id);
         return ResponseEntity
                 .status(FOUND)
                 .body(ApiResponse.builder()
                         .data(null)
-                        .message("delete category successfully")
+                        .message("delete schedule successfully")
                         .httpStatus(OK.value())
                         .build()
                 );
 
     }
+
 }

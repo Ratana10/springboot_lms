@@ -1,6 +1,9 @@
 package com.kongsun.leanring.system.course;
 
 import com.kongsun.leanring.system.exception.ApiResponse;
+import com.kongsun.leanring.system.schedule.Schedule;
+import com.kongsun.leanring.system.schedule.ScheduleMapper;
+import com.kongsun.leanring.system.schedule.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +18,9 @@ import static org.springframework.http.HttpStatus.*;
 @RequiredArgsConstructor
 public class CourseController {
     private final CourseService courseService;
+    private final ScheduleService scheduleService;
     private final CourseMapper courseMapper;
+    private final ScheduleMapper scheduleMapper;
 
 
     @GetMapping
@@ -108,7 +113,7 @@ public class CourseController {
 
     }
 
-    @PutMapping("{courseId}/teachers")
+    @DeleteMapping("{courseId}/teachers")
     public ResponseEntity<ApiResponse> removeTeacherFromCourse(@PathVariable Long courseId) {
         courseService.removeTeacherFromCourse(courseId);
 
@@ -118,6 +123,20 @@ public class CourseController {
                         .data(null)
                         .message("remove teacher from course successfully")
                         .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
+
+    @GetMapping("{courseId}/schedules")
+    public ResponseEntity<ApiResponse> getSchedulesByCourseId(@PathVariable Long courseId) {
+        List<Schedule> schedules = scheduleService.getSchedulesByCourseId(courseId);
+        return ResponseEntity
+                .status(FOUND)
+                .body(ApiResponse.builder()
+                        .data(schedules.stream().map(scheduleMapper::toScheduleDTO).toList())
+                        .message("get schedules by course id successfully")
+                        .httpStatus(FOUND.value())
                         .build()
                 );
 
