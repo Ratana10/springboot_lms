@@ -1,5 +1,8 @@
 package com.kongsun.leanring.system.teacher;
 
+import com.kongsun.leanring.system.course.Course;
+import com.kongsun.leanring.system.course.CourseMapper;
+import com.kongsun.leanring.system.course.CourseService;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,9 @@ import static org.springframework.http.HttpStatus.*;
 public class TeacherController {
     private final TeacherService teacherService;
     private final TeacherMapper teacherMapper;
+    private final CourseService courseService;
+    private final CourseMapper courseMapper;
+
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAll() {
@@ -92,6 +98,20 @@ public class TeacherController {
                         .build()
                 );
 
+    }
+
+    @GetMapping("{teacherId}/courses")
+    public ResponseEntity<ApiResponse> getCoursesByTeacherId(@PathVariable Long teacherId) {
+        List<Course> courses = courseService.getCoursesByTeacherId(teacherId);
+
+        return ResponseEntity
+                .status(FOUND)
+                .body(ApiResponse.builder()
+                        .data(courses.stream().map(courseMapper::toCourseDTO).toList())
+                        .message("get courses by teacher id successfully")
+                        .httpStatus(FOUND.value())
+                        .build()
+                );
     }
 
 }

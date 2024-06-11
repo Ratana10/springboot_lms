@@ -1,9 +1,11 @@
 package com.kongsun.leanring.system.course;
 
+import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.teacher.Teacher;
 import com.kongsun.leanring.system.teacher.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,5 +64,17 @@ public class CourseServiceImpl implements CourseService {
         Course course = getById(courseId);
         course.setTeacher(null);
         courseRepository.save(course);
+    }
+
+    @Override
+    public List<Course> getCoursesByTeacherId(Long teacherId) {
+        teacherService.getById(teacherId);
+        List<Course> courses = courseRepository.findByTeacherId(teacherId);
+        if(courses.isEmpty()){
+            throw new ApiException(
+                    HttpStatus.NOT_FOUND,
+                    String.format("teacher id=%d don't have the course to teach", teacherId));
+        }
+        return courses;
     }
 }
