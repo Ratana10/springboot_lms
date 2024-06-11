@@ -14,4 +14,7 @@ public interface CourseService {
 
     List<Course> getAll();
 
+    Course addTeacherToCourse(Long courseId, Long teacherId);
+    void removeTeacherFromCourse(Long courseId);
+
 }

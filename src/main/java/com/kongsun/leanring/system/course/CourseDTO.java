@@ -24,4 +24,6 @@ public class CourseDTO {
     @NotNull(message = "categoryId is required")
     private Long categoryId;
 
+    private Long teacherId;
+
 }

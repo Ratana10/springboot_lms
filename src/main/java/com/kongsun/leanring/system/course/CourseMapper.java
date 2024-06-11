@@ -1,13 +1,16 @@
 package com.kongsun.leanring.system.course;
 
 import com.kongsun.leanring.system.category.CategoryService;
+import com.kongsun.leanring.system.teacher.TeacherService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper(
         componentModel = "spring",
         uses = {
-                CategoryService.class
+                CategoryService.class,
+                TeacherService.class
         }
 )
 public interface CourseMapper {
@@ -16,8 +19,9 @@ public interface CourseMapper {
     )
     Course toCourse(CourseDTO dto);
 
-    @Mapping(
-            target = "categoryId", source = "category.id"
-    )
+    @Mappings({
+            @Mapping(target = "categoryId", source = "category.id"),
+            @Mapping(target = "teacherId", source = "teacher.id")
+    })
     CourseDTO toCourseDTO(Course course);
 }

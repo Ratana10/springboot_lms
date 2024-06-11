@@ -93,4 +93,34 @@ public class CourseController {
 
     }
 
+    @PutMapping("{courseId}/teachers/{teacherId}")
+    public ResponseEntity<ApiResponse> addTeacherToCourse(@PathVariable Long courseId, @PathVariable Long teacherId) {
+        Course course = courseService.addTeacherToCourse(courseId, teacherId);
+
+        return ResponseEntity
+                .ok()
+                .body(ApiResponse.builder()
+                        .data(courseMapper.toCourseDTO(course))
+                        .message("add teacher to course successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
+
+    @PutMapping("{courseId}/teachers")
+    public ResponseEntity<ApiResponse> removeTeacherFromCourse(@PathVariable Long courseId) {
+        courseService.removeTeacherFromCourse(courseId);
+
+        return ResponseEntity
+                .ok()
+                .body(ApiResponse.builder()
+                        .data(null)
+                        .message("remove teacher from course successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
+
 }

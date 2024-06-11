@@ -1,6 +1,8 @@
 package com.kongsun.leanring.system.course;
 
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
+import com.kongsun.leanring.system.teacher.Teacher;
+import com.kongsun.leanring.system.teacher.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
+    private final TeacherService teacherService;
 
     @Override
     public Course create(Course course) {
@@ -44,5 +47,20 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getAll() {
         return courseRepository.findAll();
+    }
+
+    @Override
+    public Course addTeacherToCourse(Long courseId, Long teacherId) {
+        Course course = getById(courseId);
+        Teacher teacher = teacherService.getById(teacherId);
+        course.setTeacher(teacher);
+        return courseRepository.save(course);
+    }
+
+    @Override
+    public void removeTeacherFromCourse(Long courseId) {
+        Course course = getById(courseId);
+        course.setTeacher(null);
+        courseRepository.save(course);
     }
 }
