@@ -42,13 +42,16 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public Enrollment getById(Long id) {
-        return enrollmentRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Enrollment", id));
+    public EnrollmentResponse getById(Long id) {
+        Enrollment enrollment = enrollmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Enrollment", id));
+
+        return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
 
     @Override
     public void deleteById(Long id) {
+        getById(id);
         enrollmentRepository.deleteById(id);
     }
 
@@ -61,7 +64,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .toList();
     }
 
-    private boolean checkStudentEnrollmentCourses(Long studentId, Set<Long> courseIds) {
+    private void checkStudentEnrollmentCourses(Long studentId, Set<Long> courseIds) {
         List<Enrollment> existingEnrollments = enrollmentRepository.findByStudentIdAndCourseIds(studentId, courseIds);
 
         if(!existingEnrollments.isEmpty()){
@@ -76,8 +79,5 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                     "Student ID " + studentId + " is already enrolled in courses with IDs: " + enrolledCourseIds
             );
         }
-
-
-        return true;
     }
 }
