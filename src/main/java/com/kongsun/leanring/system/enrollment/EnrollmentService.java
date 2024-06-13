@@ -4,7 +4,7 @@ import java.util.List;
 
 
 public interface EnrollmentService {
-    EnrollmentDTO create(EnrollmentDTO enrollmentDTO);
+    EnrollmentRequest create(EnrollmentRequest enrollmentRequest);
     Enrollment getById(Long id);
 
     void deleteById(Long id);

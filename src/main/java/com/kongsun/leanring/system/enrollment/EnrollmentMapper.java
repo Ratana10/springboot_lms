@@ -19,5 +19,5 @@ public interface EnrollmentMapper {
             @Mapping(target = "student", source = "studentId"),
             @Mapping(target = "courses", source = "courseIds"),
     })
-    Enrollment toEnrollment(EnrollmentDTO dto);
+    Enrollment toEnrollment(EnrollmentRequest dto);
 }

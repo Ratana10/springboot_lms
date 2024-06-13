@@ -1,7 +1,5 @@
 package com.kongsun.leanring.system.enrollment;
 
-import com.kongsun.leanring.system.student.Student;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class EnrollmentDTO {
+public class EnrollmentRequest {
     @NotNull(message = "studentId is required")
     private Long studentId;
 
@@ -21,11 +19,4 @@ public class EnrollmentDTO {
 
     @NotNull(message = "date is required")
     private LocalDate date;
-
-    private BigDecimal total;
-
-    private BigDecimal remain;
-
-    private EnrollmentStatus status;
-
 }
