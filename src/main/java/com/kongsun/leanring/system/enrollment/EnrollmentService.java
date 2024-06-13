@@ -4,11 +4,11 @@ import java.util.List;
 
 
 public interface EnrollmentService {
-    EnrollmentRequest create(EnrollmentRequest enrollmentRequest);
+    EnrollmentResponse create(EnrollmentRequest enrollmentRequest);
     Enrollment getById(Long id);
 
     void deleteById(Long id);
 
-    List<Enrollment> getAll();
+    List<EnrollmentResponse> getAll();
 
 }

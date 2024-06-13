@@ -18,7 +18,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
 
     @Override
-    public EnrollmentRequest create(EnrollmentRequest enrollmentRequest) {
+    public EnrollmentResponse create(EnrollmentRequest enrollmentRequest) {
         Enrollment enrollment = enrollmentMapper.toEnrollment(enrollmentRequest);
 
         BigDecimal total = enrollment.getCourses().stream()
@@ -31,7 +31,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         enrollmentRepository.save(enrollment);
 
-        return null;
+        return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
 
     @Override
@@ -46,8 +46,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public List<Enrollment> getAll() {
-        return null;
+    public List<EnrollmentResponse> getAll() {
+        List<Enrollment> enrollments = enrollmentRepository.findAll();
+
+        return enrollments.stream()
+                .map(enrollmentMapper::toEnrollmentResponse)
+                .toList();
     }
 
     private boolean isStudentEnrollmentInCourse(Long studentId, Long courseId) {

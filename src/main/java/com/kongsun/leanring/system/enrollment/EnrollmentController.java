@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -17,12 +19,11 @@ public class EnrollmentController {
     @PostMapping
     public ResponseEntity<ApiResponse> create(@RequestBody @Valid EnrollmentRequest request) {
 
-        enrollmentService.create(request);
-
+        EnrollmentResponse enrollmentResponse = enrollmentService.create(request);
         return ResponseEntity
                 .status(CREATED)
                 .body(ApiResponse.builder()
-                        .data(null)
+                        .data(enrollmentResponse)
                         .message("create enrollment successfully")
                         .httpStatus(CREATED.value())
                         .build()
@@ -44,6 +45,19 @@ public class EnrollmentController {
                         .build()
                 );
 
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAll() {
+        List<EnrollmentResponse> enrollmentResponses = enrollmentService.getAll();
+        return ResponseEntity
+                .status(OK)
+                .body(ApiResponse.builder()
+                        .data(enrollmentResponses)
+                        .message("get all enrollment successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
     }
 
 }
