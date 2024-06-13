@@ -30,4 +30,20 @@ public class EnrollmentController {
 
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<ApiResponse> delete(@PathVariable Long id) {
+
+        enrollmentService.deleteById(id);
+
+        return ResponseEntity
+                .status(OK)
+                .body(ApiResponse.builder()
+                        .data(null)
+                        .message("delete enrollment successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
+
 }

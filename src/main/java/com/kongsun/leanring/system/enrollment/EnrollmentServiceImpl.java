@@ -1,6 +1,7 @@
 package com.kongsun.leanring.system.enrollment;
 
 import com.kongsun.leanring.system.course.Course;
+import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public Enrollment getById(Long id) {
-        return null;
+        return enrollmentRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Enrollment", id));
     }
 
     @Override
     public void deleteById(Long id) {
-
+        enrollmentRepository.deleteById(id);
     }
 
     @Override
