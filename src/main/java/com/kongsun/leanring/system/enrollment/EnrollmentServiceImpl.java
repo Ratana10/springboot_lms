@@ -1,25 +1,29 @@
 package com.kongsun.leanring.system.enrollment;
 
 import com.kongsun.leanring.system.course.Course;
+import com.kongsun.leanring.system.course.CourseDTO;
+import com.kongsun.leanring.system.course.CourseMapper;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
+import com.kongsun.leanring.system.student.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
+import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.UNPAID;
 
 @Service
 @RequiredArgsConstructor
 public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentMapper enrollmentMapper;
+    private final CourseMapper courseMapper;
     private final EnrollmentRepository enrollmentRepository;
+    private final StudentService studentService;
 
     @Override
     public EnrollmentResponse create(EnrollmentRequest request) {
@@ -58,16 +62,27 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public List<EnrollmentResponse> getAll() {
         List<Enrollment> enrollments = enrollmentRepository.findAll();
-
         return enrollments.stream()
                 .map(enrollmentMapper::toEnrollmentResponse)
                 .toList();
     }
 
+    @Override
+    public List<CourseDTO> getStudentEnrollmentCourses(Long studentId) {
+        studentService.getById(studentId);
+        List<Enrollment> enrollments = enrollmentRepository.findByStudentId(studentId);
+        return enrollments.stream()
+                .flatMap(enr -> enr.getCourses().stream())
+                .distinct()
+                .map(courseMapper::toCourseDTO)
+                .toList();
+
+    }
+
     private void checkStudentEnrollmentCourses(Long studentId, Set<Long> courseIds) {
         List<Enrollment> existingEnrollments = enrollmentRepository.findByStudentIdAndCourseIds(studentId, courseIds);
 
-        if(!existingEnrollments.isEmpty()){
+        if (!existingEnrollments.isEmpty()) {
             String enrolledCourseIds = existingEnrollments.stream()
                     .flatMap(enr -> enr.getCourses().stream())
                     .filter(course -> courseIds.contains(course.getId()))

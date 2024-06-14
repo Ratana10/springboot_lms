@@ -12,4 +12,6 @@ import java.util.Set;
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     @Query("SELECT e FROM Enrollment e JOIN e.courses c WHERE e.student.id = :studentId AND c.id IN :courseIds")
     List<Enrollment> findByStudentIdAndCourseIds(Long studentId, Set<Long> courseIds);
+
+    List<Enrollment> findByStudentId(Long studentId);
 }

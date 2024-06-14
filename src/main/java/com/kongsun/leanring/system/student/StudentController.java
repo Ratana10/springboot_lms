@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.student;
 
+import com.kongsun.leanring.system.enrollment.EnrollmentService;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import static org.springframework.http.HttpStatus.*;
 public class StudentController {
     private final StudentService studentService;
     private final StudentMapper studentMapper;
+    private final EnrollmentService enrollmentService;
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAll() {
@@ -94,4 +96,16 @@ public class StudentController {
 
     }
 
+    @GetMapping("{studentId}/courses")
+    public ResponseEntity<ApiResponse> getStudentEnrollmentCourses(@PathVariable Long studentId) {
+        return ResponseEntity
+                .ok()
+                .body(ApiResponse.builder()
+                        .data(enrollmentService.getStudentEnrollmentCourses(studentId))
+                        .message("get student enrollment courses successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
 }
