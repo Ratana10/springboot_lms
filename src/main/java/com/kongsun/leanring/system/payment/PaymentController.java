@@ -28,7 +28,7 @@ public class PaymentController {
 
     }
 
-    @DeleteMapping("{paymentId}/cancel")
+    @DeleteMapping("{paymentId}g")
     public ResponseEntity<ApiResponse> delete(@PathVariable Long paymentId) {
         paymentService.deleteById(paymentId);
         return ResponseEntity
