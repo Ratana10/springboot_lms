@@ -14,4 +14,5 @@ public interface StudentService {
 
     List<Student> getAll();
 
+    List<Student> getByIds(List<Long> studentIds);
 }
