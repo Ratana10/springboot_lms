@@ -8,7 +8,7 @@ import java.util.List;
 public interface EnrollmentService {
     EnrollmentResponse create(EnrollmentRequest enrollmentRequest);
 
-    EnrollmentResponse getById(Long id);
+    Enrollment getById(Long id);
 
     void deleteById(Long id);
 

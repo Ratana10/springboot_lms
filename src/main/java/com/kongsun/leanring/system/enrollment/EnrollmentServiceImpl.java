@@ -46,11 +46,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public EnrollmentResponse getById(Long id) {
-        Enrollment enrollment = enrollmentRepository.findById(id)
+    public Enrollment getById(Long id) {
+        return enrollmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment", id));
-
-        return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
 
     @Override
