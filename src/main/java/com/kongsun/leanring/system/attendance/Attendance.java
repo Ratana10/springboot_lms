@@ -1,14 +1,11 @@
 package com.kongsun.leanring.system.attendance;
 
-import com.kongsun.leanring.system.attendance_detail.AttendanceDetail;
 import com.kongsun.leanring.system.course.Course;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -26,11 +23,4 @@ public class Attendance {
 
     @Column(name = "att_date")
     private LocalDate date;
-
-    @OneToMany(
-            mappedBy = "attendance",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<AttendanceDetail> attendanceDetails = new ArrayList<>();
 }

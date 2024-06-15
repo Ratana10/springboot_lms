@@ -4,10 +4,7 @@ import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -27,6 +24,20 @@ public class AttendanceController {
                         .httpStatus(CREATED.value())
                         .build()
                 );
+
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity
+                .ok(attendanceService.getAll());
+
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        return ResponseEntity
+                .ok(attendanceService.getById(id));
 
     }
 

@@ -1,9 +1,6 @@
 package com.kongsun.leanring.system.attendance;
 
-import com.kongsun.leanring.system.category.Category;
-import com.kongsun.leanring.system.category.CategoryDTO;
 import com.kongsun.leanring.system.course.CourseService;
-import com.kongsun.leanring.system.student.StudentService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,4 +13,7 @@ import org.mapstruct.Mapping;
 public interface AttendanceMapper {
     @Mapping(target = "course", source = "courseId")
     Attendance toAttendance(AttendanceRequest request);
+
+    @Mapping(target = "courseId", source = "course.id")
+    AttendanceResponse toAttendanceResponse(Attendance attendance);
 }
