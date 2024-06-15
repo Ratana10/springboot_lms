@@ -2,9 +2,11 @@ package com.kongsun.leanring.system.student;
 
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,24 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> getAll() {
         //TODO search student by their name
         return studentRepository.findAll();
+    }
+
+    @Override
+    public List<Student> getAll(Map<String , String> params) {
+        Specification<Student> spec = Specification.where(null);
+
+        if(params.containsKey("name")){
+            spec = spec.and(StudentSpec.containLastname(params.get("name")))
+                    .or(StudentSpec.containFirstname(params.get("name")));
+        }
+        if(params.containsKey("phone")){
+           spec = spec.and(StudentSpec.containPhone(params.get("phone")));
+        }
+        if(params.containsKey("gender")){
+            spec = spec.and(StudentSpec.containGender(params.get("gender")));
+        }
+
+        return studentRepository.findAll(spec);
     }
 
     @Override

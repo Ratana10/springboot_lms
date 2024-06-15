@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -19,7 +20,7 @@ public class StudentController {
     private final StudentMapper studentMapper;
     private final EnrollmentService enrollmentService;
 
-    @GetMapping
+//    @GetMapping
     public ResponseEntity<ApiResponse> getAll() {
         List<Student> students = studentService.getAll();
 
@@ -29,6 +30,18 @@ public class StudentController {
                         .data(students.stream()
                                 .map(studentMapper::toStudentDTO)
                                 .toList())
+                        .message("get students successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAll(@RequestParam Map<String,String > params) {
+        return ResponseEntity
+                .ok()
+                .body(ApiResponse.builder()
+                        .data(studentService.getAll(params))
                         .message("get students successfully")
                         .httpStatus(OK.value())
                         .build()
