@@ -1,15 +1,20 @@
 package com.kongsun.leanring.system.course;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.teacher.Teacher;
 import com.kongsun.leanring.system.teacher.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -49,8 +54,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAll() {
-        return courseRepository.findAll();
+    public PageDTO getAll(Map<String,String> params) {
+        Specification<Course> spec = Specification.where(null);
+        if(params.containsKey("name")){
+            spec = spec.and(CourseSpec.containName(params.get("name")))
+                    .or(CourseSpec.containDescription(params.get("name")))
+                    .or(CourseSpec.containCategoryName(params.get("name")));
+        }
+
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        return new PageDTO(courseRepository.findAll(spec, pageable));
     }
 
     @Override

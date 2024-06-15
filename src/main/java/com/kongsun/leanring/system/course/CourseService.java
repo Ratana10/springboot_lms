@@ -1,6 +1,9 @@
 package com.kongsun.leanring.system.course;
 
+import com.kongsun.leanring.system.common.PageDTO;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -13,7 +16,7 @@ public interface CourseService {
 
     void deleteById(Long id);
 
-    List<Course> getAll();
+    PageDTO getAll(Map<String, String> params);
 
     Course addTeacherToCourse(Long courseId, Long teacherId);
     void removeTeacherFromCourse(Long courseId);

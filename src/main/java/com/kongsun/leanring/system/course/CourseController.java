@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.course;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import com.kongsun.leanring.system.schedule.Schedule;
 import com.kongsun.leanring.system.schedule.ScheduleMapper;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -24,20 +26,9 @@ public class CourseController {
 
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<Course> courses = courseService.getAll();
-
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity
-                .ok()
-                .body(ApiResponse.builder()
-                        .data(courses.stream()
-                                .map(courseMapper::toCourseDTO)
-                                .toList())
-                        .message("get courses successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
-
+                .ok(courseService.getAll(params));
     }
 
     @PostMapping
