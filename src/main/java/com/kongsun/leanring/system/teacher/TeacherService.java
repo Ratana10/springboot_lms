@@ -1,6 +1,8 @@
 package com.kongsun.leanring.system.teacher;
 
-import java.util.List;
+import com.kongsun.leanring.system.common.PageDTO;
+
+import java.util.Map;
 
 
 public interface TeacherService {
@@ -12,6 +14,6 @@ public interface TeacherService {
 
     void deleteById(Long id);
 
-    List<Teacher> getAll();
+    PageDTO getAll(Map<String, String> params);
 
 }

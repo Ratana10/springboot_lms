@@ -1,10 +1,15 @@
 package com.kongsun.leanring.system.teacher;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +45,27 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> getAll() {
-        return teacherRepository.findAll();
+    public PageDTO getAll(Map<String, String> params) {
+        Specification<Teacher> spec = Specification.where(null);
+
+        if (params.containsKey("name")) {
+            spec = spec.and(TeacherSpec.containLastname(params.get("name")))
+                    .or(TeacherSpec.containFirstname(params.get("name")));
+        }
+        if (params.containsKey("gender")) {
+            spec = spec.and(TeacherSpec.hasGender(params.get("gender")));
+        }
+        if (params.containsKey("stop")) {
+            spec = spec.and(TeacherSpec.isStopWork(Boolean.parseBoolean(params.get("stop"))));
+        } else {
+            //get only teacher working
+            spec = spec.and(TeacherSpec.isStopWork(false));
+        }
+
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        Page<Teacher> studentPage = teacherRepository.findAll(spec, pageable);
+
+        return new PageDTO(studentPage);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.teacher;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.course.Course;
 import com.kongsun.leanring.system.course.CourseMapper;
 import com.kongsun.leanring.system.course.CourseService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -22,21 +24,10 @@ public class TeacherController {
     private final CourseService courseService;
     private final CourseMapper courseMapper;
 
-
     @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<Teacher> teachers = teacherService.getAll();
-
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity
-                .ok()
-                .body(ApiResponse.builder()
-                        .data(teachers.stream()
-                                .map(teacherMapper::toTeacherDTO)
-                                .toList())
-                        .message("get teachers successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
+                .ok(teacherService.getAll(params));
     }
 
     @PostMapping
