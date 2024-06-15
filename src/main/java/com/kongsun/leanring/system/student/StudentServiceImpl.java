@@ -1,7 +1,11 @@
 package com.kongsun.leanring.system.student;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -41,13 +45,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getAll() {
-        //TODO search student by their name
-        return studentRepository.findAll();
-    }
-
-    @Override
-    public List<Student> getAll(Map<String , String> params) {
+    public PageDTO getAll(Map<String , String> params) {
         Specification<Student> spec = Specification.where(null);
 
         if(params.containsKey("name")){
@@ -61,7 +59,10 @@ public class StudentServiceImpl implements StudentService {
             spec = spec.and(StudentSpec.containGender(params.get("gender")));
         }
 
-        return studentRepository.findAll(spec);
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        Page<Student> studentPage = studentRepository.findAll(spec, pageable);
+
+        return new PageDTO(studentPage);
     }
 
     @Override

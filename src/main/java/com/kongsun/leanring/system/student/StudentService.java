@@ -1,5 +1,8 @@
 package com.kongsun.leanring.system.student;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +16,7 @@ public interface StudentService {
 
     void deleteById(Long id);
 
-    List<Student> getAll();
-
-    List<Student> getAll(Map<String , String> params);
+    PageDTO getAll(Map<String , String> params);
 
     List<Student> getByIds(List<Long> studentIds);
 }

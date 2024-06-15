@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.student;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.enrollment.EnrollmentService;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
@@ -20,32 +21,10 @@ public class StudentController {
     private final StudentMapper studentMapper;
     private final EnrollmentService enrollmentService;
 
-//    @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<Student> students = studentService.getAll();
-
-        return ResponseEntity
-                .ok()
-                .body(ApiResponse.builder()
-                        .data(students.stream()
-                                .map(studentMapper::toStudentDTO)
-                                .toList())
-                        .message("get students successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
-    }
-
     @GetMapping
-    public ResponseEntity<ApiResponse> getAll(@RequestParam Map<String,String > params) {
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String,String > params) {
         return ResponseEntity
-                .ok()
-                .body(ApiResponse.builder()
-                        .data(studentService.getAll(params))
-                        .message("get students successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
+                .ok(studentService.getAll(params));
     }
 
     @PostMapping
