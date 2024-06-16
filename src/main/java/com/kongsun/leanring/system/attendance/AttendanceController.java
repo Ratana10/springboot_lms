@@ -1,10 +1,13 @@
 package com.kongsun.leanring.system.attendance;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -28,9 +31,9 @@ public class AttendanceController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String ,String> params) {
         return ResponseEntity
-                .ok(attendanceService.getAll());
+                .ok(attendanceService.getAll(params));
 
     }
 
@@ -38,13 +41,6 @@ public class AttendanceController {
     public ResponseEntity<?> getById(@PathVariable Long id) {
         return ResponseEntity
                 .ok(attendanceService.getById(id));
-
-    }
-
-    @GetMapping("/courses/{courseId}")
-    public ResponseEntity<?> getAllAttendanceByCourseId(@PathVariable Long courseId) {
-        return ResponseEntity
-                .ok(attendanceService.getAllAttendanceByCourseId(courseId));
 
     }
 

@@ -2,13 +2,20 @@ package com.kongsun.leanring.system.attendance;
 
 import com.kongsun.leanring.system.attendance_detail.AttendanceDetail;
 import com.kongsun.leanring.system.attendance_detail.AttendanceDetailRepository;
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.student.Student;
 import com.kongsun.leanring.system.student.StudentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,11 +55,37 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<?> getAll() {
-        List<Attendance> attendances = attendanceRepository.findAll();
+    public PageDTO getAll(Map<String ,String> params) {
+        Specification<Attendance> spec = Specification.where(null);
+        if(params.containsKey("startDate") && params.containsKey("endDate")){
+            LocalDate startDate = LocalDate.parse(params.get("startDate"));
+            LocalDate endDate = LocalDate.parse(params.get("endDate"));
+            spec = AttendanceSpec.betweenDate(startDate, endDate);
+        }
+        if(params.containsKey("courseId")){
+            spec = AttendanceSpec.containCourseId(Long.parseLong(params.get("courseId")));
+        }
 
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        Page<Attendance> atts = attendanceRepository.findAll(spec, pageable);
 
-        return attendances.stream().map(attendanceMapper::toAttendanceResponse).toList();
+        List<Long> attIds = atts.stream().map(Attendance::getId).toList();
+        List<AttendanceDetail> attDetails = attendanceDetailRepository.findByAttendanceIdIn(attIds);
+
+        //grouping attDetails by attId
+        Map<Long, List<AttendanceDetail>> attendanceDetailsMap = attDetails.stream()
+                .collect(Collectors.groupingBy(attendanceDetail -> attendanceDetail.getAttendance().getId()));
+
+        //Map attRecord to attResponse
+        List<AttendanceResponse> attResponse = atts.stream()
+                .map(att -> {
+                    List<AttendanceDetail> attDetail = attendanceDetailsMap.getOrDefault(att.getId(), Collections.emptyList());
+
+                    return getAttendanceResponse(att, attDetail);
+                })
+                .toList();
+
+        return new PageDTO(new PageImpl<>(attResponse, pageable, atts.getTotalElements()));
     }
 
     @Override
@@ -62,30 +95,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         List<AttendanceDetail> attendanceDetails = attendanceDetailRepository.findByAttendanceId(id);
         return getAttendanceResponse(attendances, attendanceDetails);
-    }
-
-    @Override
-    public List<?> getAllAttendanceByCourseId(Long courseId) {
-        List<Attendance> attCourse = attendanceRepository.findByCourseId(courseId);
-        List<Long> attIds = attCourse.stream().map(Attendance::getId).toList();
-
-        List<AttendanceDetail> attDetails = attendanceDetailRepository.findByAttendanceIdIn(attIds);
-
-        //grouping attDetails by attId
-        Map<Long, List<AttendanceDetail>> attendanceDetailsMap = attDetails.stream()
-                .collect(Collectors.groupingBy(attendanceDetail -> attendanceDetail.getAttendance().getId()));
-
-        //Map attRecord to attResponse
-        List<AttendanceResponse> listAttResponse = attCourse.stream()
-                .map(att -> {
-                    List<AttendanceDetail> attDetail = attendanceDetailsMap.getOrDefault(att.getId(), Collections.emptyList());
-
-                    return getAttendanceResponse(att, attDetail);
-                })
-                .toList();
-
-        return listAttResponse;
-
     }
 
     private AttendanceResponse getAttendanceResponse(Attendance att, List<AttendanceDetail> attDetail) {
