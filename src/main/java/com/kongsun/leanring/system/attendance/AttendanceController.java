@@ -41,4 +41,11 @@ public class AttendanceController {
 
     }
 
+    @GetMapping("/courses/{courseId}")
+    public ResponseEntity<?> getAllAttendanceByCourseId(@PathVariable Long courseId) {
+        return ResponseEntity
+                .ok(attendanceService.getAllAttendanceByCourseId(courseId));
+
+    }
+
 }

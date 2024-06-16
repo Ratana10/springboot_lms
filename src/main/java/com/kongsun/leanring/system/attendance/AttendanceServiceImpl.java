@@ -80,6 +80,27 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public List<?> getAllAttendanceByCourseId(Long courseId) {
-        return null;
+        List<Attendance> attendanceByCourse = attendanceRepository.findByCourseId(courseId);
+
+        List<AttendanceResponse> listAttResponse = new ArrayList<>();
+        for (Attendance att: attendanceByCourse){
+            List<AttendanceDetail> attDetail = attendanceDetailRepository.findByAttendanceId(att.getId());
+
+            Map<AttendanceStatus, List<Long>> attendanceMap = attDetail.stream()
+                    .collect(
+                            Collectors.groupingBy(
+                                    AttendanceDetail::getAttendanceStatus,
+                                    Collectors.mapping(
+                                            ad -> ad.getStudent().getId(), Collectors.toList()
+                                    )
+                            )
+                    );
+
+            AttendanceResponse attResponse = attendanceMapper.toAttendanceResponse(att);
+            attResponse.setAttendance(attendanceMap);
+            listAttResponse.add(attResponse);
+        }
+
+        return listAttResponse;
     }
 }
