@@ -6,8 +6,7 @@ import com.kongsun.leanring.system.student.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Builder
 @AllArgsConstructor

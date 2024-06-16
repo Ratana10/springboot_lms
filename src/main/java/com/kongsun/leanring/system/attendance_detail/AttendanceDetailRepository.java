@@ -9,10 +9,6 @@ import java.util.List;
 @Repository
 public interface AttendanceDetailRepository extends JpaRepository<AttendanceDetail, Long> {
     List<AttendanceDetail> findByAttendanceId(Long attendanceId);
+    List<AttendanceDetail> findByAttendanceIdIn(List<Long> attendanceIds);
 
-    @Query("""
-            SELECT ad FROM AttendanceDetail ad
-            WHERE ad.attendance.id IN :attendanceIds
-    """)
-    List<AttendanceDetail> findByAttendanceIds(List<Long> attendanceIds);
 }

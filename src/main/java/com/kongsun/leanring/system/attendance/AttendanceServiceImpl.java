@@ -9,10 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,43 +61,46 @@ public class AttendanceServiceImpl implements AttendanceService {
                 .orElseThrow(()-> new ResourceNotFoundException("Attendance", id));
 
         List<AttendanceDetail> attendanceDetails = attendanceDetailRepository.findByAttendanceId(id);
-        Map<AttendanceStatus, List<Long>> attendanceMap = attendanceDetails.stream()
-                .collect(
-                        Collectors.groupingBy(
-                        AttendanceDetail::getAttendanceStatus,
-                        Collectors.mapping(attDetail -> attDetail.getStudent().getId(),
-                        Collectors.toList())
-                ));
-
-        AttendanceResponse attendanceResponse = attendanceMapper.toAttendanceResponse(attendances);
-        attendanceResponse.setAttendance(attendanceMap);
-
-        return attendanceResponse;
+        return getAttendanceResponse(attendances, attendanceDetails);
     }
 
     @Override
     public List<?> getAllAttendanceByCourseId(Long courseId) {
-        List<Attendance> attendanceByCourse = attendanceRepository.findByCourseId(courseId);
+        List<Attendance> attCourse = attendanceRepository.findByCourseId(courseId);
+        List<Long> attIds = attCourse.stream().map(Attendance::getId).toList();
 
-        List<AttendanceResponse> listAttResponse = new ArrayList<>();
-        for (Attendance att: attendanceByCourse){
-            List<AttendanceDetail> attDetail = attendanceDetailRepository.findByAttendanceId(att.getId());
+        List<AttendanceDetail> attDetails = attendanceDetailRepository.findByAttendanceIdIn(attIds);
 
-            Map<AttendanceStatus, List<Long>> attendanceMap = attDetail.stream()
-                    .collect(
-                            Collectors.groupingBy(
-                                    AttendanceDetail::getAttendanceStatus,
-                                    Collectors.mapping(
-                                            ad -> ad.getStudent().getId(), Collectors.toList()
-                                    )
-                            )
-                    );
+        //grouping attDetails by attId
+        Map<Long, List<AttendanceDetail>> attendanceDetailsMap = attDetails.stream()
+                .collect(Collectors.groupingBy(attendanceDetail -> attendanceDetail.getAttendance().getId()));
 
-            AttendanceResponse attResponse = attendanceMapper.toAttendanceResponse(att);
-            attResponse.setAttendance(attendanceMap);
-            listAttResponse.add(attResponse);
-        }
+        //Map attRecord to attResponse
+        List<AttendanceResponse> listAttResponse = attCourse.stream()
+                .map(att -> {
+                    List<AttendanceDetail> attDetail = attendanceDetailsMap.getOrDefault(att.getId(), Collections.emptyList());
+
+                    return getAttendanceResponse(att, attDetail);
+                })
+                .toList();
 
         return listAttResponse;
+
+    }
+
+    private AttendanceResponse getAttendanceResponse(Attendance att, List<AttendanceDetail> attDetail) {
+        Map<AttendanceStatus, List<Long>> attendanceMap = attDetail.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                AttendanceDetail::getAttendanceStatus,
+                                Collectors.mapping(
+                                        ad -> ad.getStudent().getId(), Collectors.toList()
+                                )
+                        )
+                );
+
+        AttendanceResponse attResponse = attendanceMapper.toAttendanceResponse(att);
+        attResponse.setAttendance(attendanceMap);
+        return attResponse;
     }
 }
