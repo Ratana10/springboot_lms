@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface AttendanceService {
-    Attendance create(AttendanceRequest attendanceRequest);
+    AttendanceResponse create(AttendanceRequest attendanceRequest);
 
     PageDTO getAll(Map<String ,String> params);
 

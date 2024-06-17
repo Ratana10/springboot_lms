@@ -29,29 +29,28 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceMapper attendanceMapper;
 
     @Override
-    public Attendance create(AttendanceRequest attendanceRequest) {
+    public AttendanceResponse create(AttendanceRequest attendanceRequest) {
         Attendance attendance = attendanceMapper.toAttendance(attendanceRequest);
         attendanceRepository.save(attendance);
 
         Map<AttendanceStatus, List<Long>> map = attendanceRequest.getAttendance();
-        for (Map.Entry<AttendanceStatus, List<Long>> entry : map.entrySet()) {
-            AttendanceStatus status = entry.getKey();
-            List<Long> studentIds = entry.getValue();
-
-            List<Student> students = studentService.getByIds(studentIds);
-            List<AttendanceDetail> attendanceDetails = students.stream()
-                    .map(stu ->
+        List<AttendanceDetail> attendanceDetails = map.entrySet().stream()
+                .flatMap(entry -> {
+                    AttendanceStatus status = entry.getKey();
+                    List<Long> studentIds = entry.getValue();
+                    List<Student> students = studentService.getByIds(studentIds);
+                    return students.stream().map(stu ->
                             AttendanceDetail.builder()
                                     .attendance(attendance)
                                     .attendanceStatus(status)
                                     .student(stu)
                                     .build()
+                    );
+                })
+                .toList();
 
-                    ).toList();
-            attendanceDetailRepository.saveAll(attendanceDetails);
-
-        }
-        return attendance;
+        attendanceDetailRepository.saveAll(attendanceDetails);
+        return getAttendanceResponse(attendance, attendanceDetails);
     }
 
     @Override
