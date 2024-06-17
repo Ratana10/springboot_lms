@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.attendance;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.course.Course;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "attendances")
-public class Attendance {
+public class Attendance extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "att_id")

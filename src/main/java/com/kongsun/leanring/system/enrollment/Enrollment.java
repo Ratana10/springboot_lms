@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.enrollment;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.course.Course;
 import com.kongsun.leanring.system.student.Student;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "enrollments")
-public class Enrollment {
+public class Enrollment extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "enr_id")

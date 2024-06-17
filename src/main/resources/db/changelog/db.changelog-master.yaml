@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
+      file: db/changelog/000_db_schema.yml
+  - include:
       file: db/changelog/001_category.yml
   - include:
       file: db/changelog/002_teacher.yml

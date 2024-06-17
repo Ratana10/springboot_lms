@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.payment;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.enrollment.Enrollment;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "payments")
-public class Payment {
+public class Payment extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pay_id")

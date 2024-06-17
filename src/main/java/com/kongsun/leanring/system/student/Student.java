@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.student;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.teacher.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "students")
-public class Student {
+public class Student extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stu_id")

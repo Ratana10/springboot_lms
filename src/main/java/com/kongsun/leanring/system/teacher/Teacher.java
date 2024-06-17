@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.teacher;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "teachers")
-public class Teacher {
+public class Teacher extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tea_id")

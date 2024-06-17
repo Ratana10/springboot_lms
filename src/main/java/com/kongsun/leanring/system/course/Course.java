@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.course;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.category.Category;
 import com.kongsun.leanring.system.teacher.Teacher;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "courses")
-public class Course {
+public class Course extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cou_id")

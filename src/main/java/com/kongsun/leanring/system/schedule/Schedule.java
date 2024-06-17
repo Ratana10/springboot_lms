@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.schedule;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.course.Course;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.time.LocalTime;
 @Setter
 @Entity
 @Table(name = "schedules")
-public class Schedule {
+public class Schedule extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sch_id")

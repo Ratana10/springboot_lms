@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.category;
 
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cat_id")
