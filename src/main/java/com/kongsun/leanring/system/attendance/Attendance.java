@@ -4,8 +4,6 @@ import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.course.Course;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
