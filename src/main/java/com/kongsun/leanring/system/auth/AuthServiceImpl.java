@@ -1,9 +1,11 @@
 package com.kongsun.leanring.system.auth;
 
 import com.kongsun.leanring.system.config.jwt.JwtService;
+import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.user.User;
 import com.kongsun.leanring.system.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +37,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
+        if(userRepository.findByUsername(request.getUsername()).isPresent()){
+            throw new ApiException(HttpStatus.BAD_REQUEST,"User already exists");
+        }
         User user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
