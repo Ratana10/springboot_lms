@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.config;
 
+import com.kongsun.leanring.system.config.jwt.JwtAuthEntryPoint;
 import com.kongsun.leanring.system.config.jwt.JwtAuthFilter;
 import com.kongsun.leanring.system.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,6 +32,7 @@ public class SecurityConfig {
                                 .authenticated()
                 )
                 .userDetailsService(userDetailsService)
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
