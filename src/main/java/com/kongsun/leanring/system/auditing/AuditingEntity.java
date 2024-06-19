@@ -11,7 +11,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -37,15 +36,14 @@ public abstract class AuditingEntity {
     @CreatedBy
     @Column(
             name = "created_by",
-            nullable = true,
             updatable = false
     )
-    private Integer createdBy;
+    private Long createdBy;
 
     @LastModifiedBy
     @Column(
             name = "updated_by",
             insertable = false
     )
-    private Integer updatedBy;
+    private Long updatedBy;
 }
