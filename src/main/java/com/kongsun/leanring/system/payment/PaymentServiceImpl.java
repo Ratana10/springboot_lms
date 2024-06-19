@@ -5,6 +5,9 @@ import com.kongsun.leanring.system.enrollment.EnrollmentRepository;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +17,7 @@ import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@CacheConfig(cacheNames = "paymentsCache")
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
@@ -46,12 +50,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @CachePut(key = "#id")
     public Payment getById(Long id) {
         return paymentRepository.findById(id)
                 .orElseThrow((() -> new ResourceNotFoundException("Payment", id)));
     }
 
     @Override
+    @CacheEvict(key = "#id")
     public void deleteById(Long id) {
         Payment payment = getById(id);
         Enrollment enrollment = payment.getEnrollment();

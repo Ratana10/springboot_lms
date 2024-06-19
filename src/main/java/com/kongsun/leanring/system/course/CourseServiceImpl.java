@@ -7,6 +7,11 @@ import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.teacher.Teacher;
 import com.kongsun.leanring.system.teacher.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -19,22 +24,26 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "coursesCache")
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final TeacherService teacherService;
 
     @Override
+    @CachePut(key = "#result.id")
     public Course create(Course course) {
         return courseRepository.save(course);
     }
 
     @Override
+    @Cacheable(key = "#id")
     public Course getById(Long id) {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course", id));
     }
 
     @Override
+    @CachePut(key = "#id")
     public Course update(Long id, Course course) {
         Course byId = getById(id);
 
@@ -48,12 +57,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @CacheEvict(key = "#id")
     public void deleteById(Long id) {
         getById(id);
         courseRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable
     public PageDTO getAll(Map<String,String> params) {
         Specification<Course> spec = Specification.where(null);
         if(params.containsKey("name")){
@@ -82,6 +93,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(key = "#teacherId")
     public List<Course> getCoursesByTeacherId(Long teacherId) {
         teacherService.getById(teacherId);
         List<Course> courses = courseRepository.findByTeacherId(teacherId);
@@ -94,6 +106,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(key = "#courseIds")
     public Set<Course> findCoursesByIds(Set<Long> courseIds) {
         return new HashSet<>(courseRepository.findAllById(courseIds));
     }
