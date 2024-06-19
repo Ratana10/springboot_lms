@@ -1,10 +1,13 @@
 package com.kongsun.leanring.system.category;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface CategoryService {
@@ -12,6 +15,6 @@ public interface CategoryService {
     Category getById(Long id);
     Category update(Long id, Category category);
     void deleteById(Long id);
-    List<Category> getAll();
+    PageDTO getAll(Map<String, String> params);
 
 }

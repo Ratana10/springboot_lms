@@ -3,7 +3,11 @@ package com.kongsun.leanring.system.enrollment;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +17,8 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/api/v1/enrollments")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
+@CacheConfig(cacheNames = "enrollmentsCache")
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
@@ -48,6 +54,7 @@ public class EnrollmentController {
     }
 
     @GetMapping
+    @Cacheable
     public ResponseEntity<ApiResponse> getAll() {
         List<EnrollmentResponse> enrollmentResponses = enrollmentService.getAll();
         return ResponseEntity

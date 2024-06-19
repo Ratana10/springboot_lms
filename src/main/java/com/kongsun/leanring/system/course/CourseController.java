@@ -8,6 +8,7 @@ import com.kongsun.leanring.system.schedule.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/api/v1/courses")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class CourseController {
     private final CourseService courseService;
     private final ScheduleService scheduleService;

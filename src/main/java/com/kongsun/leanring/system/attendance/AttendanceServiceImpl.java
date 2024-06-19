@@ -9,6 +9,8 @@ import com.kongsun.leanring.system.student.Student;
 import com.kongsun.leanring.system.student.StudentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@CacheConfig(cacheNames = "attendancesCache")
 public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final AttendanceDetailRepository attendanceDetailRepository;
@@ -54,6 +57,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    @Cacheable
     public PageDTO getAll(Map<String ,String> params) {
         Specification<Attendance> spec = Specification.where(null);
         if(params.containsKey("startDate") && params.containsKey("endDate")){

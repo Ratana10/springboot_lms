@@ -4,6 +4,10 @@ import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,21 +17,25 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "teachersCache")
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
     @Override
+    @CachePut(key = "#result.id")
     public Teacher create(Teacher teacher) {
         return teacherRepository.save(teacher);
     }
 
     @Override
+    @Cacheable(key = "#id")
     public Teacher getById(Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher", id));
     }
 
     @Override
+    @CachePut(key = "#id")
     public Teacher update(Long id, Teacher teacher) {
         Teacher byId = getById(id);
         byId.setFirstName(teacher.getFirstName());
@@ -39,12 +47,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    @CacheEvict(key = "#id")
     public void deleteById(Long id) {
         getById(id);
         teacherRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable
     public PageDTO getAll(Map<String, String> params) {
         Specification<Teacher> spec = Specification.where(null);
 

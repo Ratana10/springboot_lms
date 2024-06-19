@@ -1,37 +1,31 @@
 package com.kongsun.leanring.system.category;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/v1/categories")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class CategoryController {
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
 
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<Category> categories = categoryService.getAll();
-
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity
-                .ok()
-                .body(ApiResponse.builder()
-                        .data(categories.stream()
-                                .map(categoryMapper::toCategoryDTO)
-                                .toList())
-                        .message("get categories successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
+                .ok(categoryService.getAll(params));
 
     }
 
