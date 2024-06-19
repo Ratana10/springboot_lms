@@ -22,8 +22,9 @@ import java.util.Map;
 @CacheConfig(cacheNames = "categoriesCache")
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+
     @Override
-    @CachePut(key = "#result.id")
+    @CacheEvict(allEntries = true)
     public Category create(Category category) {
         return categoryRepository.save(category);
     }
@@ -32,11 +33,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Cacheable(key = "#id")
     public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Category", id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category", id));
     }
 
     @Override
-    @CachePut(key = "#id")
+    @CacheEvict(allEntries = true)
     public Category update(Long id, Category category) {
         Category byId = getById(id);
         byId.setName(category.getName());
@@ -44,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         getById(id);
         categoryRepository.deleteById(id);
@@ -54,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Cacheable
     public PageDTO getAll(Map<String, String> params) {
         Specification<Category> spec = Specification.where(null);
-        if(params.containsKey("name")){
+        if (params.containsKey("name")) {
             spec = CategorySpec.containName(params.get("name"));
         }
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
