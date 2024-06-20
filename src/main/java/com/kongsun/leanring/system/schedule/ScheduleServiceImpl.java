@@ -23,7 +23,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final CourseService courseService;
 
     @Override
-    @CachePut(key = "#result.id")
+    @CacheEvict(allEntries = true)
     public Schedule create(Schedule schedule) {
         return scheduleRepository.save(schedule);
     }
@@ -36,7 +36,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    @CachePut(key = "#id")
+    @CacheEvict(allEntries = true)
     public Schedule update(Long id, Schedule schedule) {
         Schedule byId = getById(id);
         byId.setDay(schedule.getDay());
@@ -47,7 +47,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         getById(id);
         scheduleRepository.deleteById(id);
