@@ -7,6 +7,9 @@ import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.student.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.UNPAID;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "enrollmentsCache")
 public class EnrollmentServiceImpl implements EnrollmentService {
     private final EnrollmentMapper enrollmentMapper;
     private final CourseMapper courseMapper;
@@ -26,6 +30,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final StudentService studentService;
 
     @Override
+    @CacheEvict(allEntries = true)
     public EnrollmentResponse create(EnrollmentRequest request) {
         checkStudentEnrollmentCourses(request.getStudentId(), request.getCourseIds());
 
@@ -46,18 +51,21 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    @Cacheable(key = "#id")
     public Enrollment getById(Long id) {
         return enrollmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment", id));
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         getById(id);
         enrollmentRepository.deleteById(id);
     }
 
     @Override
+    @Cacheable
     public List<EnrollmentResponse> getAll() {
         List<Enrollment> enrollments = enrollmentRepository.findAll();
         return enrollments.stream()

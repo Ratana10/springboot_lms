@@ -18,7 +18,6 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/api/v1/enrollments")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
-@CacheConfig(cacheNames = "enrollmentsCache")
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
@@ -54,7 +53,6 @@ public class EnrollmentController {
     }
 
     @GetMapping
-    @Cacheable
     public ResponseEntity<ApiResponse> getAll() {
         List<EnrollmentResponse> enrollmentResponses = enrollmentService.getAll();
         return ResponseEntity
