@@ -61,7 +61,7 @@ create table courses
 
 create table schedules
 (
-    ch_id  bigserial   primary KEY,
+    sch_id  bigserial   primary KEY,
     day varchar(10),
     start_time TIME,
     end_time TIME,

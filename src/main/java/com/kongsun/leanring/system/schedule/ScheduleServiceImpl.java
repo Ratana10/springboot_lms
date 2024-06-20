@@ -29,7 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    @Cacheable(key = "id")
+    @Cacheable(key = "#id")
     public Schedule getById(Long id) {
         return scheduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule", id));
