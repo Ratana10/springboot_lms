@@ -20,14 +20,14 @@ public class Student extends AuditingEntity {
     @Column(
             name = "stu_firstname",
             nullable = false,
-            length = 10
+            length = 50
     )
     private String firstName;
 
     @Column(
             name = "stu_lastname",
             nullable = false,
-            length = 20
+            length = 50
     )
     private String lastName;
 
@@ -40,7 +40,7 @@ public class Student extends AuditingEntity {
 
     @Column(
             name = "stu_phone",
-            length = 11,
+            length = 12,
             unique = true
     )
     @Pattern(regexp="(^$|[0-9]{10})")

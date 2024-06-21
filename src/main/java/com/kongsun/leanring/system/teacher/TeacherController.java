@@ -53,11 +53,10 @@ public class TeacherController {
         Teacher teacher = teacherService.getById(id);
 
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
+                .ok(ApiResponse.builder()
                         .data(teacherMapper.toTeacherDTO(teacher))
                         .message("get teacher successfully")
-                        .httpStatus(FOUND.value())
+                        .httpStatus(OK.value())
                         .build()
                 );
     }
@@ -98,11 +97,10 @@ public class TeacherController {
         List<Course> courses = courseService.getCoursesByTeacherId(teacherId);
 
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
+                .ok(ApiResponse.builder()
                         .data(courses.stream().map(courseMapper::toCourseDTO).toList())
                         .message("get courses by teacher id successfully")
-                        .httpStatus(FOUND.value())
+                        .httpStatus(OK.value())
                         .build()
                 );
     }

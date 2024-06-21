@@ -23,7 +23,7 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
 
     @Override
-    @CachePut(key = "#result.id")
+    @CacheEvict(allEntries = true)
     public Student create(Student student) {
         return studentRepository.save(student);
     }
@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @CachePut(key = "#id")
+    @CacheEvict(allEntries = true)
     public Student update(Long id, Student student) {
         Student byId = getById(id);
         byId.setFirstName(student.getFirstName());
@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         getById(id);
         studentRepository.deleteById(id);

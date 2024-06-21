@@ -21,16 +21,16 @@ public class Teacher extends AuditingEntity {
     @Column(
             name = "tea_firstname",
             nullable = false,
-            length = 10
+            length = 50
     )
-    private String firstName;
+    private String firstname;
 
     @Column(
             name = "tea_lastname",
             nullable = false,
-            length = 20
+            length = 50
     )
-    private String lastName;
+    private String lastname;
 
     @Enumerated(EnumType.STRING)
     @Column(

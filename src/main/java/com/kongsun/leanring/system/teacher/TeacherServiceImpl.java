@@ -6,7 +6,6 @@ import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +21,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
     @Override
-    @CachePut(key = "#result.id")
+    @CacheEvict(allEntries = true)
     public Teacher create(Teacher teacher) {
         return teacherRepository.save(teacher);
     }
@@ -35,19 +34,20 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    @CachePut(key = "#id")
+    @CacheEvict(allEntries = true)
     public Teacher update(Long id, Teacher teacher) {
         Teacher byId = getById(id);
-        byId.setFirstName(teacher.getFirstName());
-        byId.setLastName(teacher.getLastName());
+        byId.setFirstname(teacher.getFirstname());
+        byId.setLastname(teacher.getLastname());
         byId.setGender(teacher.getGender());
         byId.setSalary(teacher.getSalary());
         byId.setHireDate(teacher.getHireDate());
+        byId.setStopWork(teacher.isStopWork());
         return teacherRepository.save(byId);
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         getById(id);
         teacherRepository.deleteById(id);

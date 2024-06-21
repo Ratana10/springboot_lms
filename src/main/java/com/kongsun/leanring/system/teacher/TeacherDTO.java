@@ -1,8 +1,6 @@
 package com.kongsun.leanring.system.teacher;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +12,10 @@ import java.time.LocalDate;
 public class TeacherDTO {
 
     @NotNull(message = "firstname is required")
-    private String firstName;
+    private String firstname;
 
     @NotNull(message = "lastname is required")
-    private String lastName;
+    private String lastname;
 
 
     private Gender gender = Gender.MALE;
@@ -28,6 +26,6 @@ public class TeacherDTO {
 
     private LocalDate hireDate;
 
-    private boolean stopWork;
+    private boolean stopWork = false;
 
 }

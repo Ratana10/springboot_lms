@@ -50,11 +50,10 @@ public class StudentController {
         Student student = studentService.getById(id);
 
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
+                .ok(ApiResponse.builder()
                         .data(studentMapper.toStudentDTO(student))
                         .message("get student successfully")
-                        .httpStatus(FOUND.value())
+                        .httpStatus(OK.value())
                         .build()
                 );
     }
