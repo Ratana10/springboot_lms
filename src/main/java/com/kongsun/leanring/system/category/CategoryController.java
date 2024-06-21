@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
@@ -30,13 +29,13 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> create(@RequestBody @Valid CategoryDTO dto) {
-        Category category = categoryMapper.toCategory(dto);
+    public ResponseEntity<ApiResponse> create(@RequestBody @Valid CategoryRequest request) {
+        Category category = categoryMapper.toCategory(request);
         category = categoryService.create(category);
         return ResponseEntity
                 .status(CREATED)
                 .body(ApiResponse.builder()
-                        .data(categoryMapper.toCategoryDTO(category))
+                        .data(categoryMapper.toCategoryResponse(category))
                         .message("create category successfully")
                         .httpStatus(CREATED.value())
                         .build()
@@ -48,24 +47,23 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> getById(@PathVariable Long id) {
         Category category = categoryService.getById(id);
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
-                        .data(categoryMapper.toCategoryDTO(category))
+                .ok(ApiResponse.builder()
+                        .data(categoryMapper.toCategoryResponse(category))
                         .message("get category successfully")
-                        .httpStatus(FOUND.value())
+                        .httpStatus(OK.value())
                         .build()
                 );
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid CategoryDTO dto) {
-        Category category = categoryMapper.toCategory(dto);
+    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid CategoryRequest request) {
+        Category category = categoryMapper.toCategory(request);
         category = categoryService.update(id, category);
         return ResponseEntity
                 .ok()
                 .body(ApiResponse.builder()
-                        .data(categoryMapper.toCategoryDTO(category))
+                        .data(categoryMapper.toCategoryResponse(category))
                         .message("update category successfully")
                         .httpStatus(OK.value())
                         .build()
@@ -77,8 +75,7 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> deleteById(@PathVariable Long id) {
         categoryService.deleteById(id);
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
+                .ok(ApiResponse.builder()
                         .data(null)
                         .message("delete category successfully")
                         .httpStatus(OK.value())
@@ -86,4 +83,5 @@ public class CategoryController {
                 );
 
     }
+
 }
