@@ -1,12 +1,10 @@
 package com.kongsun.leanring.system.category;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-public class CategoryDTO {
+@Data
+public class CategoryRequest {
     @NotNull(message = "name is required")
     private String name;
 }

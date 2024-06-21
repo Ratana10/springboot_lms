@@ -18,7 +18,7 @@ public class Category extends AuditingEntity {
     @Column(
             name = "cat_name",
             nullable = false,
-            length = 30
+            length = 50
     )
     private String name;
 
