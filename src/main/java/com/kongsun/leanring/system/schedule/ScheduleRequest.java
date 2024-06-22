@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class ScheduleDTO {
+public class ScheduleRequest {
 
     @NotNull(message = "day is required")
     private Day day;

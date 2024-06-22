@@ -124,7 +124,7 @@ public class CourseController {
         List<Schedule> schedules = scheduleService.getSchedulesByCourseId(courseId);
         return ResponseEntity
                 .ok(ApiResponse.builder()
-                        .data(schedules.stream().map(scheduleMapper::toScheduleDTO).toList())
+                        .data(schedules.stream().map(scheduleMapper::toScheduleResponse).toList())
                         .message("get schedules by course id successfully")
                         .httpStatus(OK.value())
                         .build()

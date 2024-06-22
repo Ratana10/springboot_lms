@@ -1,5 +1,7 @@
 package com.kongsun.leanring.system.schedule;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.course.CourseService;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ErrorResponse;
@@ -9,10 +11,12 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -55,8 +59,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Cacheable
-    public List<Schedule> getAll() {
-        return scheduleRepository.findAll();
+    public PageDTO getAll(Map<String,String> params) {
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        return new PageDTO(scheduleRepository.findAll(pageable));
     }
 
     @Override

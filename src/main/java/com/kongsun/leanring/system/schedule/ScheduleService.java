@@ -1,6 +1,9 @@
 package com.kongsun.leanring.system.schedule;
 
+import com.kongsun.leanring.system.common.PageDTO;
+
 import java.util.List;
+import java.util.Map;
 
 
 public interface ScheduleService {
@@ -12,7 +15,7 @@ public interface ScheduleService {
 
     void deleteById(Long id);
 
-    List<Schedule> getAll();
+    PageDTO getAll(Map<String,String> params);
     List<Schedule> getSchedulesByCourseId(Long courseId);
 
 }
