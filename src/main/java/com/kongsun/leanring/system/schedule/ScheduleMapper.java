@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 )
 public interface ScheduleMapper {
     @Mapping(target = "course", source = "courseId")
-    Schedule toSchedule(ScheduleDTO dto);
+    Schedule toSchedule(ScheduleRequest request);
     @Mapping(target = "courseId", source = "course.id")
-    ScheduleDTO toScheduleDTO(Schedule schedule);
+    ScheduleResponse toScheduleResponse(Schedule schedule);
 }

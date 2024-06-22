@@ -1,8 +1,8 @@
 package com.kongsun.leanring.system.enrollment;
 
 import com.kongsun.leanring.system.course.Course;
-import com.kongsun.leanring.system.course.CourseDTO;
 import com.kongsun.leanring.system.course.CourseMapper;
+import com.kongsun.leanring.system.course.CourseResponse;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.student.StudentService;
@@ -74,13 +74,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public List<CourseDTO> getStudentEnrollmentCourses(Long studentId) {
+    public List<CourseResponse> getStudentEnrollmentCourses(Long studentId) {
         studentService.getById(studentId);
         List<Enrollment> enrollments = enrollmentRepository.findByStudentId(studentId);
         return enrollments.stream()
                 .flatMap(enr -> enr.getCourses().stream())
                 .distinct()
-                .map(courseMapper::toCourseDTO)
+                .map(courseMapper::toCourseResponse)
                 .toList();
 
     }

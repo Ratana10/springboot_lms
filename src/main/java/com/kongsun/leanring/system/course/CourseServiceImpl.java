@@ -30,7 +30,7 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherService teacherService;
 
     @Override
-    @CachePut(key = "#result.id")
+    @CacheEvict(allEntries = true)
     public Course create(Course course) {
         return courseRepository.save(course);
     }
@@ -43,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @CachePut(key = "#id")
+    @CacheEvict(allEntries = true)
     public Course update(Long id, Course course) {
         Course byId = getById(id);
 
@@ -57,7 +57,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         getById(id);
         courseRepository.deleteById(id);
