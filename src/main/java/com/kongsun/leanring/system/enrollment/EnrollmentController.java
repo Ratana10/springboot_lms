@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.enrollment;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -53,16 +55,10 @@ public class EnrollmentController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAll() {
-        List<EnrollmentResponse> enrollmentResponses = enrollmentService.getAll();
+    public ResponseEntity<PageDTO> getAll(Map<String ,String >params) {
         return ResponseEntity
-                .status(OK)
-                .body(ApiResponse.builder()
-                        .data(enrollmentResponses)
-                        .message("get all enrollment successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
+                .ok(enrollmentService.getAll(params));
     }
+
 
 }
