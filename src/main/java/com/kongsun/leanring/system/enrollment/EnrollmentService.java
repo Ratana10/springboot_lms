@@ -1,8 +1,10 @@
 package com.kongsun.leanring.system.enrollment;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.course.CourseResponse;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface EnrollmentService {
@@ -12,7 +14,7 @@ public interface EnrollmentService {
 
     void deleteById(Long id);
 
-    List<EnrollmentResponse> getAll();
+    PageDTO getAll(Map<String ,String >params);
 
     List<CourseResponse> getStudentEnrollmentCourses(Long studentId);
 

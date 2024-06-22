@@ -10,6 +10,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class EnrollmentResponse {
+    private long id;
     private Long studentId;
     private Set<Long> courseIds;
     private BigDecimal total;

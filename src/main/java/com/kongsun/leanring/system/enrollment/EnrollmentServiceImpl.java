@@ -1,5 +1,7 @@
 package com.kongsun.leanring.system.enrollment;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.course.Course;
 import com.kongsun.leanring.system.course.CourseMapper;
 import com.kongsun.leanring.system.course.CourseResponse;
@@ -10,11 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -66,11 +71,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Cacheable
-    public List<EnrollmentResponse> getAll() {
-        List<Enrollment> enrollments = enrollmentRepository.findAll();
-        return enrollments.stream()
-                .map(enrollmentMapper::toEnrollmentResponse)
-                .toList();
+    public PageDTO getAll(Map<String ,String > params) {
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        return new PageDTO(enrollmentRepository.findAll(pageable));
     }
 
     @Override
