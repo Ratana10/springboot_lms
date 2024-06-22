@@ -14,14 +14,23 @@ import org.mapstruct.Mappings;
         }
 )
 public interface CourseMapper {
+//    @Mapping(
+//            target = "category", source = "categoryId"
+//    )
+//    Course toCourse(CourseDTO dto);
+//
+//    @Mappings({
+//            @Mapping(target = "categoryId", source = "category.id"),
+//            @Mapping(target = "teacherId", source = "teacher.id")
+//    })
+//    CourseDTO toCourseDTO(Course course);
     @Mapping(
             target = "category", source = "categoryId"
     )
-    Course toCourse(CourseDTO dto);
-
+    Course toCourse(CourseRequest request);
     @Mappings({
             @Mapping(target = "categoryId", source = "category.id"),
             @Mapping(target = "teacherId", source = "teacher.id")
     })
-    CourseDTO toCourseDTO(Course course);
+    CourseResponse toCourseResponse(Course course);
 }

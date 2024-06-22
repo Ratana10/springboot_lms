@@ -1,6 +1,6 @@
 package com.kongsun.leanring.system.enrollment;
 
-import com.kongsun.leanring.system.course.CourseDTO;
+import com.kongsun.leanring.system.course.CourseResponse;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ public interface EnrollmentService {
 
     List<EnrollmentResponse> getAll();
 
-    List<CourseDTO> getStudentEnrollmentCourses(Long studentId);
+    List<CourseResponse> getStudentEnrollmentCourses(Long studentId);
 
 }

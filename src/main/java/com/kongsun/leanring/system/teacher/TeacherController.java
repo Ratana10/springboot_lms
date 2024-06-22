@@ -98,7 +98,7 @@ public class TeacherController {
 
         return ResponseEntity
                 .ok(ApiResponse.builder()
-                        .data(courses.stream().map(courseMapper::toCourseDTO).toList())
+                        .data(courses.stream().map(courseMapper::toCourseResponse).toList())
                         .message("get courses by teacher id successfully")
                         .httpStatus(OK.value())
                         .build()

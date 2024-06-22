@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class CourseDTO {
+public class CourseRequest {
     @NotNull(message = "name is required")
     private String name;
 

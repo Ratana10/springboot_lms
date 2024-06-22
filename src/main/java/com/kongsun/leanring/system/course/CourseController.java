@@ -34,13 +34,13 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> create(@RequestBody @Valid CourseDTO dto) {
-        Course course = courseMapper.toCourse(dto);
+    public ResponseEntity<ApiResponse> create(@RequestBody @Valid CourseRequest request) {
+        Course course = courseMapper.toCourse(request);
         course = courseService.create(course);
         return ResponseEntity
                 .status(CREATED)
                 .body(ApiResponse.builder()
-                        .data(courseMapper.toCourseDTO(course))
+                        .data(courseMapper.toCourseResponse(course))
                         .message("create course successfully")
                         .httpStatus(CREATED.value())
                         .build()
@@ -52,24 +52,23 @@ public class CourseController {
     public ResponseEntity<ApiResponse> getById(@PathVariable Long id) {
         Course course = courseService.getById(id);
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
-                        .data(courseMapper.toCourseDTO(course))
+                .ok(ApiResponse.builder()
+                        .data(courseMapper.toCourseResponse(course))
                         .message("get course successfully")
-                        .httpStatus(FOUND.value())
+                        .httpStatus(OK.value())
                         .build()
                 );
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid CourseDTO dto) {
-        Course course = courseMapper.toCourse(dto);
+    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid CourseRequest request) {
+        Course course = courseMapper.toCourse(request);
         course = courseService.update(id, course);
         return ResponseEntity
                 .ok()
                 .body(ApiResponse.builder()
-                        .data(courseMapper.toCourseDTO(course))
+                        .data(courseMapper.toCourseResponse(course))
                         .message("update course successfully")
                         .httpStatus(OK.value())
                         .build()
@@ -81,8 +80,7 @@ public class CourseController {
     public ResponseEntity<ApiResponse> deleteById(@PathVariable Long id) {
         courseService.deleteById(id);
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
+                .ok(ApiResponse.builder()
                         .data(null)
                         .message("delete course successfully")
                         .httpStatus(OK.value())
@@ -98,7 +96,7 @@ public class CourseController {
         return ResponseEntity
                 .ok()
                 .body(ApiResponse.builder()
-                        .data(courseMapper.toCourseDTO(course))
+                        .data(courseMapper.toCourseResponse(course))
                         .message("add teacher to course successfully")
                         .httpStatus(OK.value())
                         .build()
@@ -125,11 +123,10 @@ public class CourseController {
     public ResponseEntity<ApiResponse> getSchedulesByCourseId(@PathVariable Long courseId) {
         List<Schedule> schedules = scheduleService.getSchedulesByCourseId(courseId);
         return ResponseEntity
-                .status(FOUND)
-                .body(ApiResponse.builder()
+                .ok(ApiResponse.builder()
                         .data(schedules.stream().map(scheduleMapper::toScheduleDTO).toList())
                         .message("get schedules by course id successfully")
-                        .httpStatus(FOUND.value())
+                        .httpStatus(OK.value())
                         .build()
                 );
 

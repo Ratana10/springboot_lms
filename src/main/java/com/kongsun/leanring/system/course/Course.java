@@ -22,7 +22,7 @@ public class Course extends AuditingEntity {
     @Column(
             name = "cou_name",
             nullable = false,
-            length = 20
+            length = 50
     )
     private String name;
 
