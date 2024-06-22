@@ -7,13 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudentDTO {
+public class StudentRequest {
     @NotNull(message = "firstname is required")
-    private String firstName;
+    private String firstname;
 
     @NotNull(message = "lastname is required")
-    private String lastName;
+    private String lastname;
 
+    @NotNull(message = "gender is required")
     private Gender gender;
 
     private String phone;

@@ -30,14 +30,14 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> create(@RequestBody @Valid StudentDTO dto) {
-        Student student = studentMapper.toStudent(dto);
+    public ResponseEntity<ApiResponse> create(@RequestBody @Valid StudentRequest request) {
+        Student student = studentMapper.toStudent(request);
         student = studentService.create(student);
 
         return ResponseEntity
                 .status(CREATED)
                 .body(ApiResponse.builder()
-                        .data(studentMapper.toStudentDTO(student))
+                        .data(studentMapper.toStudentResponse(student))
                         .message("create student successfully")
                         .httpStatus(CREATED.value())
                         .build()
@@ -51,7 +51,7 @@ public class StudentController {
 
         return ResponseEntity
                 .ok(ApiResponse.builder()
-                        .data(studentMapper.toStudentDTO(student))
+                        .data(studentMapper.toStudentResponse(student))
                         .message("get student successfully")
                         .httpStatus(OK.value())
                         .build()
@@ -59,14 +59,14 @@ public class StudentController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid StudentDTO dto) {
-        Student student = studentMapper.toStudent(dto);
+    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid StudentRequest request) {
+        Student student = studentMapper.toStudent(request);
         student = studentService.update(id, student);
 
         return ResponseEntity
                 .ok()
                 .body(ApiResponse.builder()
-                        .data(studentMapper.toStudentDTO(student))
+                        .data(studentMapper.toStudentResponse(student))
                         .message("update student successfully")
                         .httpStatus(OK.value())
                         .build()
