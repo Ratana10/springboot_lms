@@ -2,6 +2,7 @@ package com.kongsun.leanring.system.student;
 
 import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
+import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -11,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @CacheEvict(allEntries = true)
     public Student create(Student student) {
+        if(studentRepository.exists(StudentSpec.hasPhone(student.getPhone()))){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+        }
         return studentRepository.save(student);
     }
 
@@ -38,9 +43,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @CacheEvict(allEntries = true)
     public Student update(Long id, Student student) {
+        //before update check phone
+        boolean exists = studentRepository.exists(StudentSpec.hasPhoneExcludingId(student.getPhone(), id));
+        if(exists){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+        }
         Student byId = getById(id);
-        byId.setFirstName(student.getFirstName());
-        byId.setLastName(student.getLastName());
+        byId.setFirstname(student.getFirstname());
+        byId.setLastname(student.getLastname());
         byId.setGender(student.getGender());
         byId.setPhone(student.getPhone());
         return studentRepository.save(byId);

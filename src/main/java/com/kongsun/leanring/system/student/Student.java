@@ -22,14 +22,14 @@ public class Student extends AuditingEntity {
             nullable = false,
             length = 50
     )
-    private String firstName;
+    private String firstname;
 
     @Column(
             name = "stu_lastname",
             nullable = false,
             length = 50
     )
-    private String lastName;
+    private String lastname;
 
     @Enumerated(EnumType.STRING)
     @Column(
