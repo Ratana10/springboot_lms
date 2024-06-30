@@ -30,6 +30,10 @@ public class StudentServiceImpl implements StudentService {
         if(studentRepository.exists(StudentSpec.hasPhone(student.getPhone()))){
             throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
         }
+
+        if(studentRepository.exists(StudentSpec.hasEmail((student.getEmail())))){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+        }
         return studentRepository.save(student);
     }
 
@@ -48,11 +52,18 @@ public class StudentServiceImpl implements StudentService {
         if(exists){
             throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
         }
+
+        boolean existsEmail = studentRepository.exists(StudentSpec.hasEmailExcludingId(student.getEmail(), id));
+        if(existsEmail){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+        }
+
         Student byId = getById(id);
         byId.setFirstname(student.getFirstname());
         byId.setLastname(student.getLastname());
         byId.setGender(student.getGender());
         byId.setPhone(student.getPhone());
+        byId.setEmail(student.getEmail());
         return studentRepository.save(byId);
     }
 
@@ -68,12 +79,11 @@ public class StudentServiceImpl implements StudentService {
     public PageDTO getAll(Map<String , String> params) {
         Specification<Student> spec = Specification.where(null);
 
-        if(params.containsKey("name")){
-            spec = spec.and(StudentSpec.containLastname(params.get("name")))
-                    .or(StudentSpec.containFirstname(params.get("name")));
-        }
-        if(params.containsKey("phone")){
-           spec = spec.and(StudentSpec.containPhone(params.get("phone")));
+        if(params.containsKey("search")){
+            spec = spec.and(StudentSpec.containLastname(params.get("search")))
+                    .or(StudentSpec.containFirstname(params.get("search")))
+                    .or(StudentSpec.containPhone(params.get("search")))
+                    .or(StudentSpec.containEmail(params.get("search")));
         }
         if(params.containsKey("gender")){
             spec = spec.and(StudentSpec.containGender(params.get("gender")));

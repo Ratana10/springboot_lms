@@ -3,6 +3,7 @@ package com.kongsun.leanring.system.student;
 import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.teacher.Gender;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,7 +44,12 @@ public class Student extends AuditingEntity {
             length = 12,
             unique = true
     )
-    @Pattern(regexp="(^$|[0-9]{10})")
     private String phone;
 
+    @Column(
+            name = "stu_email",
+            length = 50
+    )
+    @Email
+    private String email;
 }
