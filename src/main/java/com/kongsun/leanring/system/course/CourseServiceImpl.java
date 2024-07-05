@@ -47,12 +47,12 @@ public class CourseServiceImpl implements CourseService {
     public Course update(Long id, Course course) {
         Course byId = getById(id);
 
-        byId.setId(course.getId());
         byId.setName(course.getName());
         byId.setDescription(course.getDescription());
         byId.setPrice(course.getPrice());
         byId.setImage(course.getImage());
         byId.setCategory(course.getCategory());
+        byId.setTeacher(course.getTeacher());
         return courseRepository.save(byId);
     }
 
@@ -67,10 +67,10 @@ public class CourseServiceImpl implements CourseService {
     @Cacheable
     public PageDTO getAll(Map<String,String> params) {
         Specification<Course> spec = Specification.where(null);
-        if(params.containsKey("name")){
-            spec = spec.and(CourseSpec.containName(params.get("name")))
-                    .or(CourseSpec.containDescription(params.get("name")))
-                    .or(CourseSpec.containCategoryName(params.get("name")));
+        if(params.containsKey("search")){
+            spec = spec.and(CourseSpec.containName(params.get("search")))
+                    .or(CourseSpec.containDescription(params.get("search")))
+                    .or(CourseSpec.containCategoryName(params.get("search")));
         }
 
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);

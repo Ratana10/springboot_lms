@@ -64,6 +64,7 @@ public class CourseController {
     @PutMapping("{id}")
     public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody @Valid CourseRequest request) {
         Course course = courseMapper.toCourse(request);
+
         course = courseService.update(id, course);
         return ResponseEntity
                 .ok()

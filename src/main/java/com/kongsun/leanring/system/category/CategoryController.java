@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
@@ -25,6 +26,20 @@ public class CategoryController {
     public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity
                 .ok(categoryService.getAll(params));
+
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse> getAll() {
+        List<Category> categories = categoryService.getAll();
+        return ResponseEntity
+                .status(CREATED)
+                .body(ApiResponse.builder()
+                        .data(categories.stream().map(categoryMapper::toCategoryResponse).toList())
+                        .message("get all category successfully")
+                        .httpStatus(CREATED.value())
+                        .build()
+                );
 
     }
 

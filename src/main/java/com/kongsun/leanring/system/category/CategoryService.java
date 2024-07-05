@@ -16,5 +16,5 @@ public interface CategoryService {
     Category update(Long id, Category category);
     void deleteById(Long id);
     PageDTO getAll(Map<String, String> params);
-
+    List<Category> getAll();
 }

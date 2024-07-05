@@ -61,4 +61,9 @@ public class CategoryServiceImpl implements CategoryService {
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
         return new PageDTO(categoryRepository.findAll(spec, pageable));
     }
+
+    @Override
+    public List<Category> getAll() {
+        return categoryRepository.findAll();
+    }
 }
