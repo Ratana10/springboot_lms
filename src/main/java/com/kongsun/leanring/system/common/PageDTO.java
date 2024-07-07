@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.common;
 
+import com.kongsun.leanring.system.payment.Payment;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 
@@ -25,4 +26,19 @@ public class PageDTO {
                 .build();
 
     }
+
+    public PageDTO(List<?> list) {
+        data = list;
+        pagination = PaginationDTO.builder()
+                .empty(list.isEmpty())
+                .first(true)
+                .last(true)
+                .pageSize(list.size())
+                .pageNumber(1)
+                .totalPages(1)
+                .totalElements((long) list.size())
+                .numberOfElements(list.size())
+                .build();
+    }
+
 }

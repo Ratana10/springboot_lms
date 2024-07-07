@@ -1,11 +1,14 @@
 package com.kongsun.leanring.system.payment;
 
+import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -41,6 +44,13 @@ public class PaymentController {
                         .httpStatus(OK.value())
                         .build()
                 );
+
+    }
+
+    @GetMapping
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String ,String > params) {
+        return ResponseEntity
+                .ok(paymentService.getAll(params));
 
     }
 

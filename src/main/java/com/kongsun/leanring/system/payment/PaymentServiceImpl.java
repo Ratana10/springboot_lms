@@ -1,5 +1,7 @@
 package com.kongsun.leanring.system.payment;
 
+import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.enrollment.Enrollment;
 import com.kongsun.leanring.system.enrollment.EnrollmentRepository;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
@@ -8,9 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
 
@@ -78,5 +84,11 @@ public class PaymentServiceImpl implements PaymentService {
 
         enrollmentRepository.save(enrollment);
         paymentRepository.deleteById(id);
+    }
+
+    @Override
+    public PageDTO getAll(Map<String, String> params) {
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        return new PageDTO(paymentRepository.findAll(pageable));
     }
 }

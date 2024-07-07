@@ -80,6 +80,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             spec = EnrollmentSpec.containStudentName(params.get("search"));
         }
 
+        if(params.containsKey("all")){
+            return new PageDTO(enrollmentRepository.findAll());
+        }
+
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
         return new PageDTO(enrollmentRepository.findAll(spec, pageable));
     }
