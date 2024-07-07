@@ -17,6 +17,7 @@ public interface StudentService {
     void deleteById(Long id);
 
     PageDTO getAll(Map<String , String> params);
+    List<Student> getStudentList();
 
     List<Student> getByIds(List<Long> studentIds);
 }

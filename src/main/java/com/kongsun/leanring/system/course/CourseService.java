@@ -17,6 +17,7 @@ public interface CourseService {
     void deleteById(Long id);
 
     PageDTO getAll(Map<String, String> params);
+    List<Course> getAll();
 
     Course addTeacherToCourse(Long courseId, Long teacherId);
     void removeTeacherFromCourse(Long courseId);

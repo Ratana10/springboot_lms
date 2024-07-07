@@ -78,6 +78,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Course> getAll() {
+        return courseRepository.findAll();
+    }
+
+    @Override
     public Course addTeacherToCourse(Long courseId, Long teacherId) {
         Course course = getById(courseId);
         Teacher teacher = teacherService.getById(teacherId);

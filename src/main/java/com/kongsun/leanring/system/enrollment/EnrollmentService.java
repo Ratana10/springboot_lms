@@ -10,7 +10,7 @@ import java.util.Map;
 public interface EnrollmentService {
     EnrollmentResponse create(EnrollmentRequest enrollmentRequest);
 
-    Enrollment getById(Long id);
+    EnrollmentResponse getById(Long id);
 
     void deleteById(Long id);
 

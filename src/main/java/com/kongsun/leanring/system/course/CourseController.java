@@ -33,6 +33,12 @@ public class CourseController {
                 .ok(courseService.getAll(params));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Course>> getAll() {
+        return ResponseEntity
+                .ok(courseService.getAll());
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse> create(@RequestBody @Valid CourseRequest request) {
         Course course = courseMapper.toCourse(request);

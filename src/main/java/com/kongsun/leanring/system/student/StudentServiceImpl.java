@@ -96,6 +96,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public List<Student> getStudentList() {
+        return studentRepository.findAll();
+    }
+
+    @Override
     @Cacheable(key = "#studentIds")
     public List<Student> getByIds(List<Long> studentIds) {
         return studentRepository.findAllById(studentIds);

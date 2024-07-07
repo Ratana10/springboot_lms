@@ -55,10 +55,23 @@ public class EnrollmentController {
     }
 
     @GetMapping
-    public ResponseEntity<PageDTO> getAll(Map<String ,String >params) {
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String ,String >params) {
+        System.out.println("test params" + params);
         return ResponseEntity
                 .ok(enrollmentService.getAll(params));
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<ApiResponse> getById(@PathVariable Long id) {
+        return ResponseEntity
+                .status(OK)
+                .body(ApiResponse.builder()
+                        .data(enrollmentService.getById(id))
+                        .message("get enrollment successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
 
 }

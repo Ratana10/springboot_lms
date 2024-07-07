@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -57,9 +58,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Cacheable(key = "#id")
-    public Enrollment getById(Long id) {
-        return enrollmentRepository.findById(id)
+    public EnrollmentResponse getById(Long id) {
+        System.out.println("enrollmentid" + id);
+        Enrollment enrollment = enrollmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment", id));
+
+        return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
 
     @Override
@@ -72,8 +76,14 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     @Cacheable
     public PageDTO getAll(Map<String ,String > params) {
+        Specification<Enrollment> spec = Specification.where(null);
+
+        if(params.containsKey("search")){
+            spec = EnrollmentSpec.containStudentName(params.get("search"));
+        }
+
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
-        return new PageDTO(enrollmentRepository.findAll(pageable));
+        return new PageDTO(enrollmentRepository.findAll(spec, pageable));
     }
 
     @Override
