@@ -19,5 +19,6 @@ public class EnrollmentRequest {
 
     @NotNull(message = "date is required")
     private LocalDate date;
+    private BigDecimal amount;
 
 }

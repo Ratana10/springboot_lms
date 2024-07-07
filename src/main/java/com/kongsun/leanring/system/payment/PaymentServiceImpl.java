@@ -4,18 +4,19 @@ import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.enrollment.Enrollment;
 import com.kongsun.leanring.system.enrollment.EnrollmentRepository;
+import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.data.domain.Page;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
@@ -26,33 +27,15 @@ import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
 @CacheConfig(cacheNames = "paymentsCache")
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
-    private final PaymentMapper paymentMapper;
     private final EnrollmentRepository enrollmentRepository;
 
     @Override
-    public PaymentResponse create(PaymentDTO paymentDTO) {
-        Payment payment = paymentMapper.toPayment(paymentDTO);
+    @CacheEvict(allEntries = true)
+    public Payment create(Payment payment) {
         Enrollment enrollment = payment.getEnrollment();
-
-        BigDecimal change = BigDecimal.ZERO;
-        if (paymentDTO.getAmount().compareTo(enrollment.getRemain()) < 0) {
-            enrollment.setStatus(PARTIAL);
-            enrollment.setRemain(enrollment.getRemain().subtract(paymentDTO.getAmount()));
-        } else if (paymentDTO.getAmount().compareTo(enrollment.getRemain()) == 0) {
-            enrollment.setStatus(PAID);
-            enrollment.setRemain(BigDecimal.ZERO);
-        } else {
-            enrollment.setStatus(PAID);
-            enrollment.setRemain(BigDecimal.ZERO);
-            change = paymentDTO.getAmount().subtract(enrollment.getRemain());
-        }
-
+        checkPaymentStatus(enrollment, payment.getAmount());
         enrollmentRepository.save(enrollment);
-        paymentRepository.save(payment);
-
-        PaymentResponse response = paymentMapper.toPaymentResponse(payment);
-        response.setChange(change);
-        return response;
+        return paymentRepository.save(payment);
     }
 
     @Override
@@ -87,8 +70,38 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Cacheable
     public PageDTO getAll(Map<String, String> params) {
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
         return new PageDTO(paymentRepository.findAll(pageable));
+    }
+
+
+    private void checkPaymentStatus(Enrollment enrollment, BigDecimal paidAmount) {
+        BigDecimal cashback = BigDecimal.ZERO;
+        BigDecimal remain = checkRemain(enrollment.getRemain());
+
+        if (paidAmount.compareTo(remain) < 0) {
+            remain = remain.subtract(paidAmount);
+
+            enrollment.setStatus(PARTIAL);
+            enrollment.setRemain(remain);
+        } else if (paidAmount.compareTo(remain) > 0) {
+            cashback = paidAmount.subtract(remain);
+
+            enrollment.setStatus(PAID);
+            enrollment.setRemain(BigDecimal.ZERO);
+        } else {
+            enrollment.setStatus(PAID);
+            enrollment.setRemain(BigDecimal.ZERO);
+        }
+    }
+
+    private BigDecimal checkRemain(BigDecimal remain) {
+        if (remain.compareTo(BigDecimal.ZERO) == 0) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Cannot make payment because remain = 0");
+        }
+
+        return remain;
     }
 }

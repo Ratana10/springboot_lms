@@ -7,6 +7,9 @@ import com.kongsun.leanring.system.course.CourseMapper;
 import com.kongsun.leanring.system.course.CourseResponse;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
+import com.kongsun.leanring.system.payment.Payment;
+import com.kongsun.leanring.system.payment.PaymentDTO;
+import com.kongsun.leanring.system.payment.PaymentService;
 import com.kongsun.leanring.system.student.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -34,6 +37,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final CourseMapper courseMapper;
     private final EnrollmentRepository enrollmentRepository;
     private final StudentService studentService;
+    private final PaymentService paymentService;
 
     @Override
     @CacheEvict(allEntries = true)
@@ -51,7 +55,16 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollment.setRemain(total);
         enrollment.setStatus(UNPAID);
 
-        enrollmentRepository.save(enrollment);
+        enrollment =  enrollmentRepository.save(enrollment);
+        // check amount
+        if(request.getAmount() != null && request.getAmount().compareTo(BigDecimal.ZERO) > 0 ){
+            // make payment
+            Payment payment = new Payment();
+            payment.setEnrollment(enrollment);
+            payment.setAmount(request.getAmount());
+            payment.setDate(request.getDate());
+            paymentService.create(payment);
+        }
 
         return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
@@ -72,7 +85,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    @Cacheable
+    @CacheEvict(allEntries = true)
     public PageDTO getAll(Map<String ,String > params) {
         Specification<Enrollment> spec = Specification.where(null);
 

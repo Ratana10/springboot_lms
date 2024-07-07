@@ -5,7 +5,7 @@ import com.kongsun.leanring.system.common.PageDTO;
 import java.util.Map;
 
 public interface PaymentService {
-    PaymentResponse create(PaymentDTO paymentDTO);
+    Payment create(Payment payment);
 
     Payment getById(Long id);
 

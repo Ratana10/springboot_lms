@@ -19,13 +19,15 @@ import static org.springframework.http.HttpStatus.OK;
 @PreAuthorize("hasRole('ADMIN')")
 public class PaymentController {
     private final PaymentService paymentService;
+    private final PaymentMapper paymentMapper;
 
     @PostMapping
     public ResponseEntity<ApiResponse> create(@RequestBody @Valid PaymentDTO paymentDTO) {
+        Payment payment = paymentMapper.toPayment(paymentDTO);
         return ResponseEntity
                 .status(CREATED)
                 .body(ApiResponse.builder()
-                        .data(paymentService.create(paymentDTO))
+                        .data(paymentService.create(payment))
                         .message("create payment successfully")
                         .httpStatus(CREATED.value())
                         .build()
