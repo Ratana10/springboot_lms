@@ -58,12 +58,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Cacheable(key = "#id")
-    public EnrollmentResponse getById(Long id) {
-        System.out.println("enrollmentid" + id);
-        Enrollment enrollment = enrollmentRepository.findById(id)
+    public Enrollment getById(Long id) {
+        return enrollmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Enrollment", id));
 
-        return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
 
     @Override
@@ -96,6 +94,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .map(courseMapper::toCourseResponse)
                 .toList();
 
+    }
+
+    @Override
+    public EnrollmentResponse update(Long id, EnrollmentRequest enrollmentRequest) {
+        Enrollment byId = getById(id);
+        return null;
     }
 
     private void checkStudentEnrollmentCourses(Long studentId, Set<Long> courseIds) {
