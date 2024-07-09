@@ -15,4 +15,10 @@ public class EnrollmentSpec {
             return criteriaBuilder.or(firstname, lastname);
         };
     }
+
+    public static Specification<Enrollment> equalStatus(String status) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("status"), status);
+
+    }
 }

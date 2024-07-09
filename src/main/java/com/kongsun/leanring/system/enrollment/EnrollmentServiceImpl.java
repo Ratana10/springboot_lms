@@ -8,14 +8,12 @@ import com.kongsun.leanring.system.course.CourseResponse;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.payment.Payment;
-import com.kongsun.leanring.system.payment.PaymentDTO;
 import com.kongsun.leanring.system.payment.PaymentService;
 import com.kongsun.leanring.system.student.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -55,9 +53,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollment.setRemain(total);
         enrollment.setStatus(UNPAID);
 
-        enrollment =  enrollmentRepository.save(enrollment);
+        enrollment = enrollmentRepository.save(enrollment);
         // check amount
-        if(request.getAmount() != null && request.getAmount().compareTo(BigDecimal.ZERO) > 0 ){
+        if (request.getAmount() != null && request.getAmount().compareTo(BigDecimal.ZERO) > 0) {
             // make payment
             Payment payment = new Payment();
             payment.setEnrollment(enrollment);
@@ -86,14 +84,16 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @CacheEvict(allEntries = true)
-    public PageDTO getAll(Map<String ,String > params) {
+    public PageDTO getAll(Map<String, String> params) {
         Specification<Enrollment> spec = Specification.where(null);
 
-        if(params.containsKey("search")){
+        if (params.containsKey("search")) {
             spec = EnrollmentSpec.containStudentName(params.get("search"));
         }
-
-        if(params.containsKey("all")){
+        if (params.containsKey("status")) {
+            spec = EnrollmentSpec.equalStatus(params.get("status"));
+        }
+        if (params.containsKey("all")) {
             return new PageDTO(enrollmentRepository.findAll());
         }
 
@@ -114,7 +114,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
-    public EnrollmentResponse update(Long id, EnrollmentRequest enrollmentRequest) {
+    public EnrollmentResponse update(Long id, EnrollmentRequest request) {
+        Enrollment enrollment = enrollmentMapper.toEnrollment(request);
+
         Enrollment byId = getById(id);
         return null;
     }
