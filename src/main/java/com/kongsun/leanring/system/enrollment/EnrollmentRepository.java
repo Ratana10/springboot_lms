@@ -1,8 +1,10 @@
 package com.kongsun.leanring.system.enrollment;
 
+import com.kongsun.leanring.system.student.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>,
     List<Enrollment> findByStudentIdAndCourseIds(Long studentId, Set<Long> courseIds);
 
     List<Enrollment> findByStudentId(Long studentId);
+    @Query("SELECT DISTINCT e.student FROM Enrollment e JOIN e.courses c WHERE c.id = :courseId")
+    List<Student> findStudentByCourseId(@Param("courseId") Long courseId);
 }

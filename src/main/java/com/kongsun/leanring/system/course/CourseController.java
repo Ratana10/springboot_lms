@@ -1,10 +1,13 @@
 package com.kongsun.leanring.system.course;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.enrollment.EnrollmentService;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import com.kongsun.leanring.system.schedule.Schedule;
 import com.kongsun.leanring.system.schedule.ScheduleMapper;
 import com.kongsun.leanring.system.schedule.ScheduleService;
+import com.kongsun.leanring.system.student.Student;
+import com.kongsun.leanring.system.student.StudentMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,10 @@ import static org.springframework.http.HttpStatus.*;
 public class CourseController {
     private final CourseService courseService;
     private final ScheduleService scheduleService;
+    private final EnrollmentService enrollmentService;
     private final CourseMapper courseMapper;
     private final ScheduleMapper scheduleMapper;
+    private final StudentMapper studentMapper;
 
 
     @GetMapping
@@ -133,6 +138,19 @@ public class CourseController {
                 .ok(ApiResponse.builder()
                         .data(schedules.stream().map(scheduleMapper::toScheduleResponse).toList())
                         .message("get schedules by course id successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
+
+    @GetMapping("{courseId}/students")
+    public ResponseEntity<ApiResponse> getStudentByCourse(@PathVariable Long courseId) {
+        List<Student> studentByCourse = enrollmentService.getStudentByCourse(courseId);
+        return ResponseEntity
+                .ok(ApiResponse.builder()
+                        .data(studentByCourse.stream().map(studentMapper::toStudentResponse))
+                        .message("get student by course id successfully")
                         .httpStatus(OK.value())
                         .build()
                 );

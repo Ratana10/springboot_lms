@@ -9,6 +9,7 @@ import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.payment.Payment;
 import com.kongsun.leanring.system.payment.PaymentService;
+import com.kongsun.leanring.system.student.Student;
 import com.kongsun.leanring.system.student.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -122,6 +123,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         Enrollment byId = getById(id);
         return null;
+    }
+
+    @Override
+    public List<Student> getStudentByCourse(Long courseId) {
+        return enrollmentRepository.findStudentByCourseId(courseId);
     }
 
     private void checkStudentEnrollmentCourses(Long studentId, Set<Long> courseIds) {
