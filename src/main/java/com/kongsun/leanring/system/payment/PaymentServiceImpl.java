@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
@@ -74,6 +75,12 @@ public class PaymentServiceImpl implements PaymentService {
     public PageDTO getAll(Map<String, String> params) {
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
         return new PageDTO(paymentRepository.findAll(pageable));
+    }
+
+    @Override
+    public List<Payment> findByEnrollmentId(Long enrollmentId) {
+        List<Payment> payments = paymentRepository.findByEnrollmentId(enrollmentId);
+        return payments;
     }
 
 

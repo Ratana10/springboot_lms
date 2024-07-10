@@ -2,12 +2,16 @@ package com.kongsun.leanring.system.enrollment;
 
 import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
+import com.kongsun.leanring.system.payment.Payment;
+import com.kongsun.leanring.system.payment.PaymentMapper;
+import com.kongsun.leanring.system.payment.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -20,6 +24,8 @@ import static org.springframework.http.HttpStatus.OK;
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
     private final EnrollmentMapper enrollmentMapper;
+    private final PaymentService paymentService;
+    private final PaymentMapper paymentMapper;
 
     @PostMapping
     public ResponseEntity<ApiResponse> create(@RequestBody @Valid EnrollmentRequest request) {
@@ -83,6 +89,19 @@ public class EnrollmentController {
                         .build()
                 );
 
+    }
+
+    @GetMapping("{enrollmentId}/payments")
+    public ResponseEntity<ApiResponse> getAll(@PathVariable Long enrollmentId) {
+        List<Payment> payments = paymentService.findByEnrollmentId(enrollmentId);
+        return ResponseEntity
+                .status(OK)
+                .body(ApiResponse.builder()
+                        .data(payments.stream().map(paymentMapper::toPaymentResponse))
+                        .message("get payment successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
     }
 
 }
