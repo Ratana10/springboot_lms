@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/v1/attendances")
@@ -33,9 +34,13 @@ public class AttendanceController {
     }
 
     @GetMapping
-    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String ,String> params) {
+    public ResponseEntity<ApiResponse> getAll(@RequestParam Map<String ,String> params) {
         return ResponseEntity
-                .ok(attendanceService.getAll(params));
+                .ok(ApiResponse.builder()
+                        .data(attendanceService.getAll(params))
+                        .message("get attendance successfully")
+                        .httpStatus(OK.value())
+                        .build());
 
     }
 

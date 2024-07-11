@@ -1,17 +1,17 @@
 package com.kongsun.leanring.system.attendance;
 
+import com.kongsun.leanring.system.attendance_detail.AttendanceDetailResponse;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 public class AttendanceResponse {
     private Long id;
-    private Long courseId;
+    private String courseName;
     private LocalDate date;
-    private Map<AttendanceStatus, List<Long>> attendance;
+    private List<AttendanceDetailResponse> attendanceDetails;
 }

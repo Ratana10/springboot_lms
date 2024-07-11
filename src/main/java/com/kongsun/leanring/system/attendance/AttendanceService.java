@@ -8,7 +8,7 @@ import java.util.Map;
 public interface AttendanceService {
     AttendanceResponse create(AttendanceRequest attendanceRequest);
 
-    PageDTO getAll(Map<String ,String> params);
+    List<?> getAll(Map<String ,String> params);
 
     AttendanceResponse getById(Long id);
 }

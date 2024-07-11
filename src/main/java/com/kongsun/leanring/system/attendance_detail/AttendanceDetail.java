@@ -28,5 +28,5 @@ public class AttendanceDetail {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private AttendanceStatus attendanceStatus;
+    private AttendanceStatus status;
 }
