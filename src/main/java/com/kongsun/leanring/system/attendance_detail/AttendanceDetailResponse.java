@@ -6,6 +6,7 @@ import com.kongsun.leanring.system.student.StudentResponse;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -14,4 +15,5 @@ public class AttendanceDetailResponse {
     private Long id;
     private StudentResponse student;
     private AttendanceStatus status;
+    private LocalDate date;
 }

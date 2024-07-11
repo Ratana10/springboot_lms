@@ -26,6 +26,20 @@ public class PageDTO {
                 .build();
 
     }
+    public PageDTO(Page<?> page, List<?> data) {
+        this.data = data;
+        pagination = PaginationDTO.builder()
+                .empty(page.isEmpty())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .pageSize(page.getPageable().getPageSize())
+                .pageNumber(page.getPageable().getPageNumber() + 1)
+                .totalPages(page.getTotalPages())
+                .totalElements(page.getTotalElements())
+                .numberOfElements(page.getNumberOfElements())
+                .build();
+
+    }
 
     public PageDTO(List<?> list) {
         data = list;

@@ -2,9 +2,12 @@ package com.kongsun.leanring.system.attendance_detail;
 
 import com.kongsun.leanring.system.attendance.Attendance;
 import com.kongsun.leanring.system.attendance.AttendanceStatus;
+import com.kongsun.leanring.system.auditing.AuditingEntity;
 import com.kongsun.leanring.system.student.Student;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -12,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "attendance_details")
-public class AttendanceDetail {
+public class AttendanceDetail extends AuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "att_detail_id")
@@ -29,4 +32,7 @@ public class AttendanceDetail {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private AttendanceStatus status;
+
+    @Column(name = "att_date")
+    private LocalDate date;
 }

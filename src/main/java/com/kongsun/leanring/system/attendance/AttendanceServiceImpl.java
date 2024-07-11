@@ -43,6 +43,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                                     .attendance(attendance)
                                     .status(status)
                                     .student(stu)
+                                    .date(attendanceRequest.getDate())
                                     .build()
                     );
                 })
