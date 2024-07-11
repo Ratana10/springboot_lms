@@ -1,6 +1,5 @@
 package com.kongsun.leanring.system.attendance_detail;
 
-import com.kongsun.leanring.system.attendance.AttendanceSpec;
 import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,8 @@ public class AttendanceDetailServiceImpl implements AttendanceDetailService {
             long courseId = Long.parseLong(params.get("courseId"));
             spec = AttendanceDetailSpec.containCourseId(courseId);
         }
-        if (params.containsKey("startDate") && params.containsKey("endDate")) {
+        if (params.containsKey("startDate") && !params.get("startDate").isEmpty() &&
+                params.containsKey("endDate") && !params.get("endDate").isEmpty()) {
             LocalDate startDate = LocalDate.parse(params.get("startDate"));
             LocalDate endDate = LocalDate.parse(params.get("endDate"));
             spec = AttendanceDetailSpec.betweenDate(startDate, endDate);
