@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-cq8tds5ds78s7395ku10-a.singapore-postgres.render.com:5432/db_lms
+    url: jdbc:postgresql://dpg-cq8tds5ds78s7395ku10-a:5432/db_lms
     username: db_lms_user
     password: PYPM9TZCexVmt04vysQlhTo3p2zbuY6N
   jpa:
