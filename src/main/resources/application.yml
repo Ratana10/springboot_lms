@@ -2,7 +2,7 @@ spring:
   application:
     name: learning_management_system
   profiles:
-    active: dev
+    active: prod
 
 server:
   port: 8080
