@@ -4,6 +4,7 @@ import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
+import com.kongsun.leanring.system.student.Student;
 import com.kongsun.leanring.system.teacher.Teacher;
 import com.kongsun.leanring.system.teacher.TeacherService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,12 @@ public class CourseServiceImpl implements CourseService {
             spec = spec.and(CourseSpec.containName(params.get("search")))
                     .or(CourseSpec.containDescription(params.get("search")))
                     .or(CourseSpec.containCategoryName(params.get("search")));
+        }
+
+        if(params.containsKey("all")){
+            Sort sort = Sort.by(Sort.Order.desc("createdAt")); // Sorting by 'createdAt' field
+            List<Course> courses = courseRepository.findAll(spec, sort);
+            return new PageDTO(courses);
         }
 
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
