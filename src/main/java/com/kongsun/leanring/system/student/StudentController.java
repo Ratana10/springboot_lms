@@ -29,12 +29,6 @@ public class StudentController {
                 .ok(studentService.getAll(params));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getStudentList() {
-        return ResponseEntity
-                .ok(studentService.getStudentList());
-    }
-
     @PostMapping
     public ResponseEntity<ApiResponse> create(@RequestBody @Valid StudentRequest request) {
         Student student = studentMapper.toStudent(request);

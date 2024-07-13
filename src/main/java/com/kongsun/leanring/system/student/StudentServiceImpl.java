@@ -1,6 +1,7 @@
 package com.kongsun.leanring.system.student;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PaginationDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -87,6 +89,12 @@ public class StudentServiceImpl implements StudentService {
         }
         if(params.containsKey("gender")){
             spec = spec.and(StudentSpec.containGender(params.get("gender")));
+        }
+
+        if(params.containsKey("all")){
+            Sort sort = Sort.by(Sort.Order.desc("createdAt")); // Sorting by 'createdAt' field
+            List<Student> sortedStudents = studentRepository.findAll(spec, sort);
+            return new PageDTO(sortedStudents);
         }
 
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);

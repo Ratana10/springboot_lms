@@ -60,7 +60,6 @@ public class EnrollmentController {
 
     @GetMapping
     public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
-        System.out.println("test params" + params);
         return ResponseEntity
                 .ok(enrollmentService.getAll(params));
     }
