@@ -1,6 +1,7 @@
 package com.kongsun.leanring.system.schedule;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.common.PageUtil;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.course.CourseService;
 import com.kongsun.leanring.system.exception.ApiException;
@@ -11,7 +12,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -74,5 +77,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ApiException(HttpStatus.NOT_FOUND, "don't have schedule");
         }
         return schedules;
+    }
+
+    @Override
+    public Page<Schedule> getSchedulesByCourseId(Long courseId, Map<String, String> params) {
+        Sort sort = Sort.by(Sort.Order.asc("day"));
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params, sort);
+        return scheduleRepository.findByCourseId(courseId, pageable);
     }
 }
