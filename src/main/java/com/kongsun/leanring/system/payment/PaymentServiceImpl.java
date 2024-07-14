@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         Payment payment = getById(id);
         Enrollment enrollment = payment.getEnrollment();
@@ -78,9 +79,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<Payment> findByEnrollmentId(Long enrollmentId) {
-        List<Payment> payments = paymentRepository.findByEnrollmentId(enrollmentId);
-        return payments;
+    public Page<Payment> findByEnrollmentId(Long enrollmentId, Map<String, String > params) {
+        Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
+        return paymentRepository.findByEnrollmentId(enrollmentId, pageable);
     }
 
 

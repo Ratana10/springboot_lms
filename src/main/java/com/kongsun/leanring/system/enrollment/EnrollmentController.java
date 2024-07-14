@@ -4,9 +4,11 @@ import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import com.kongsun.leanring.system.payment.Payment;
 import com.kongsun.leanring.system.payment.PaymentMapper;
+import com.kongsun.leanring.system.payment.PaymentResponse;
 import com.kongsun.leanring.system.payment.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -91,16 +93,12 @@ public class EnrollmentController {
     }
 
     @GetMapping("{enrollmentId}/payments")
-    public ResponseEntity<ApiResponse> getAll(@PathVariable Long enrollmentId) {
-        List<Payment> payments = paymentService.findByEnrollmentId(enrollmentId);
+    public ResponseEntity<PageDTO> getAll(@PathVariable Long enrollmentId, @RequestParam Map<String, String> params) {
+        Page<Payment> paymentPage = paymentService.findByEnrollmentId(enrollmentId, params);
+        List<PaymentResponse> list = paymentPage.stream().map(paymentMapper::toPaymentResponse).toList();
+
         return ResponseEntity
-                .status(OK)
-                .body(ApiResponse.builder()
-                        .data(payments.stream().map(paymentMapper::toPaymentResponse))
-                        .message("get payment successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
+                .ok(new PageDTO(paymentPage, list));
     }
 
 }

@@ -9,8 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class AttendanceDetailResponse {
-    private Long id;
+public class AttendanceDetailRequest {
     private StudentResponse student;
     private AttendanceStatus status;
     private LocalDate date;

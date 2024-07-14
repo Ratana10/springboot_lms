@@ -1,6 +1,7 @@
 package com.kongsun.leanring.system.payment;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,6 @@ public interface PaymentService {
 
     PageDTO getAll(Map<String, String> params);
 
-    List<Payment> findByEnrollmentId(Long enrollmentId);
+    Page<Payment> findByEnrollmentId(Long enrollmentId, Map<String, String > params);
 
 }
