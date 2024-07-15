@@ -1,6 +1,8 @@
 package com.kongsun.leanring.system.enrollment;
 
 import com.kongsun.leanring.system.student.Student;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +22,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>,
     List<Enrollment> findByStudentId(Long studentId);
     @Query("SELECT DISTINCT e.student FROM Enrollment e JOIN e.courses c WHERE c.id = :courseId")
     List<Student> findStudentByCourseId(@Param("courseId") Long courseId);
+
+    @Query("SELECT e.student FROM Enrollment e JOIN e.courses c WHERE c.id = :courseId")
+    Page<Student> findStudentByCourseId(@Param("courseId") Long courseId, Pageable pageable);
 }

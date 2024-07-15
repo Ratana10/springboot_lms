@@ -9,6 +9,7 @@ import com.kongsun.leanring.system.schedule.ScheduleResponse;
 import com.kongsun.leanring.system.schedule.ScheduleService;
 import com.kongsun.leanring.system.student.Student;
 import com.kongsun.leanring.system.student.StudentMapper;
+import com.kongsun.leanring.system.student.StudentResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -138,15 +139,11 @@ public class CourseController {
     }
 
     @GetMapping("{courseId}/students")
-    public ResponseEntity<ApiResponse> getStudentByCourse(@PathVariable Long courseId) {
-        List<Student> studentByCourse = enrollmentService.getStudentByCourse(courseId);
+    public ResponseEntity<PageDTO> getStudentByCourse(@PathVariable Long courseId, @RequestParam Map<String, String> params) {
+        Page<Student> studentPage = enrollmentService.getStudentByCourse(courseId, params);
+        List<StudentResponse> list = studentPage.stream().map(studentMapper::toStudentResponse).toList();
         return ResponseEntity
-                .ok(ApiResponse.builder()
-                        .data(studentByCourse.stream().map(studentMapper::toStudentResponse))
-                        .message("get student by course id successfully")
-                        .httpStatus(OK.value())
-                        .build()
-                );
+                .ok(new PageDTO(studentPage, list));
 
     }
 

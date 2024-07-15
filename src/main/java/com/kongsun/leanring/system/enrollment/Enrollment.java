@@ -57,7 +57,7 @@ public class Enrollment extends AuditingEntity {
     )
     private LocalDate date;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToMany
     @JoinTable(
             name = "enrollment_details",
             joinColumns = @JoinColumn(name = "enr_id"),

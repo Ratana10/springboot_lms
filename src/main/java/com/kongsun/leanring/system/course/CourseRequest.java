@@ -13,7 +13,6 @@ public class CourseRequest {
     @NotNull(message = "name is required")
     private String name;
 
-    @NotNull(message = "description is required")
     private String description;
 
     @PositiveOrZero(message = "Salary must be positive or zero")

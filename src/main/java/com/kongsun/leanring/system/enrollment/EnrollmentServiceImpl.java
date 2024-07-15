@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -54,7 +56,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrollment.setRemain(total);
         enrollment.setStatus(UNPAID);
 
-        enrollment = enrollmentRepository.save(enrollment);
+        enrollmentRepository.save(enrollment);
         // check amount
         if (request.getAmount() != null && request.getAmount().compareTo(BigDecimal.ZERO) > 0) {
             // make payment
@@ -64,8 +66,10 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             payment.setDate(request.getDate());
             paymentService.create(payment);
         }
+        EnrollmentResponse enrollmentResponse = enrollmentMapper.toEnrollmentResponse(enrollment);
+        System.out.println("Test sucess.");
 
-        return enrollmentMapper.toEnrollmentResponse(enrollment);
+        return enrollmentResponse;
     }
 
     @Override
@@ -128,6 +132,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public List<Student> getStudentByCourse(Long courseId) {
         return enrollmentRepository.findStudentByCourseId(courseId);
+    }
+
+    @Override
+    public Page<Student> getStudentByCourse(Long courseId, Map<String, String> params) {
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        return enrollmentRepository.findStudentByCourseId(courseId, pageable);
     }
 
     private void checkStudentEnrollmentCourses(Long studentId, Set<Long> courseIds) {
