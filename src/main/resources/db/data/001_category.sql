@@ -1,5 +1,6 @@
 INSERT INTO categories(
                        cat_name,
+                       cat_description,
                        created_at,
                        updated_at,
                        created_by,
@@ -7,7 +8,7 @@ INSERT INTO categories(
                        deleted
 )
 VALUES
-    ('Front End', CURRENT_TIMESTAMP, null, 1, null, FALSE),
-    ('Back End', CURRENT_TIMESTAMP, null, 1, null, FALSE),
-    ('Framework', CURRENT_TIMESTAMP, null, 1, null, FALSE),
-    ('Algorithm', CURRENT_TIMESTAMP, null, 1, null, FALSE)
+    ('Front End', 'Front End description', CURRENT_TIMESTAMP, null, 1, null, FALSE),
+    ('Back End', 'Back End description', CURRENT_TIMESTAMP, null, 1, null, FALSE),
+    ('Framework', 'Framework description', CURRENT_TIMESTAMP, null, 1, null, FALSE),
+    ('Algorithm', 'Algorithm description', CURRENT_TIMESTAMP, null, 1, null, FALSE)

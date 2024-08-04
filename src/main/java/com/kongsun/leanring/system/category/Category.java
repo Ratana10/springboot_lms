@@ -22,4 +22,11 @@ public class Category extends AuditingEntity {
     )
     private String name;
 
+    @Column(
+            name = "cat_description",
+            nullable = false,
+            length = 30
+    )
+    private String description;
+
 }

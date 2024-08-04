@@ -1,7 +1,8 @@
 create table categories
 (
     cat_id  bigserial   primary KEY,
-    cat_name varchar(30),
+    cat_name varchar(30) NOT NULL,
+    cat_description varchar(30) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP,
     created_by BIGINT NULL,
