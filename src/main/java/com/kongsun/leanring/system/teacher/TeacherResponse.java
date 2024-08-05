@@ -11,6 +11,8 @@ import java.time.LocalDate;
 public class TeacherResponse {
     private Long id;
 
+    private String code;
+
     private String firstname;
 
     private String lastname;

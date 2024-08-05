@@ -11,6 +11,9 @@ import java.time.LocalDate;
 @Setter
 public class TeacherDTO {
 
+    @NotNull(message = "code is required")
+    private String code;
+
     @NotNull(message = "firstname is required")
     private String firstname;
 

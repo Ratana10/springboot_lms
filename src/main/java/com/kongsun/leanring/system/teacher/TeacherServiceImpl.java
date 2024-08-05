@@ -2,6 +2,7 @@ package com.kongsun.leanring.system.teacher;
 
 import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
+import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -10,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -23,6 +25,9 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     @CacheEvict(allEntries = true)
     public Teacher create(Teacher teacher) {
+        if(teacherRepository.existsByCode(teacher.getCode())){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Code already exists");
+        }
         return teacherRepository.save(teacher);
     }
 
@@ -37,6 +42,10 @@ public class TeacherServiceImpl implements TeacherService {
     @CacheEvict(allEntries = true)
     public Teacher update(Long id, Teacher teacher) {
         Teacher byId = getById(id);
+        if(teacherRepository.existsByCode(teacher.getCode())){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Code already exists");
+        }
+        byId.setCode(teacher.getCode());
         byId.setFirstname(teacher.getFirstname());
         byId.setLastname(teacher.getLastname());
         byId.setGender(teacher.getGender());

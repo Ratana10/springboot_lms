@@ -19,9 +19,17 @@ public class Teacher extends AuditingEntity {
     private Long id;
 
     @Column(
+            name = "tea_code",
+            nullable = false,
+            unique = true,
+            length = 50
+    )
+    private String code;
+
+    @Column(
             name = "tea_firstname",
             nullable = false,
-            length = 50
+            length = 7
     )
     private String firstname;
 

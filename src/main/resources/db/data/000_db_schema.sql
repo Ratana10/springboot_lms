@@ -13,6 +13,7 @@ create table categories
 create table teachers
 (
     tea_id  bigserial   primary KEY,
+    tea_code varchar(7) NULL,
     tea_firstname varchar(10),
     tea_lastname varchar(20),
     gender varchar(20),

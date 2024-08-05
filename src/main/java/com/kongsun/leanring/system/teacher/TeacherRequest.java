@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class TeacherRequest {
+    @NotNull(message = "code is required")
+    private String code;
 
     @NotNull(message = "firstname is required")
     private String firstname;
