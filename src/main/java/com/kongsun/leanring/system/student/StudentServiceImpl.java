@@ -66,6 +66,9 @@ public class StudentServiceImpl implements StudentService {
         byId.setGender(student.getGender());
         byId.setPhone(student.getPhone());
         byId.setEmail(student.getEmail());
+        byId.setType(student.getType());
+        byId.setPosition(student.getPosition());
+        byId.setFrom(student.getFrom());
         return studentRepository.save(byId);
     }
 

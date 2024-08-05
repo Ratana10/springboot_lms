@@ -13,5 +13,8 @@ public class StudentResponse {
     private Gender gender;
     private String phone;
     private String email;
+    private StudentType type;
+    private String position;
+    private String from;
 
 }

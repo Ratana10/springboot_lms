@@ -52,4 +52,23 @@ public class Student extends AuditingEntity {
     )
     @Email
     private String email;
+
+    @Column(
+            name = "stu_type"
+    )
+    @Enumerated(EnumType.STRING)
+    private StudentType type;
+
+    @Column(
+            name = "stu_position",
+            length = 20
+    )
+    private String position;
+
+    @Column(
+            name = "stu_from",
+            length = 20
+    )
+    private String from;
+
 }
