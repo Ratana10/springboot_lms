@@ -21,4 +21,9 @@ public class PaymentDTO {
 
     @NotNull(message = "date is required")
     private LocalDate date;
+
+    @NotNull(message = "payment method is required")
+    private PaymentMethod method;
+    @NotNull(message = "receiver is required")
+    private String receiver;
 }

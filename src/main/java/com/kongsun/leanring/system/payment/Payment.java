@@ -30,6 +30,19 @@ public class Payment extends AuditingEntity {
     private BigDecimal amount;
 
     @Column(
+            name = "pay_method",
+            nullable = false
+    )
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod method;
+
+    @Column(
+            name = "pay_receiver",
+            length = 20
+    )
+    private String receiver;
+
+    @Column(
             name = "pay_date",
             nullable = false
     )

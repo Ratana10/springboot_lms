@@ -1,5 +1,6 @@
 package com.kongsun.leanring.system.enrollment;
 
+import com.kongsun.leanring.system.payment.PaymentMethod;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +21,7 @@ public class EnrollmentRequest {
     @NotNull(message = "date is required")
     private LocalDate date;
     private BigDecimal amount;
+    private String receiver;
+    private PaymentMethod method;
 
 }

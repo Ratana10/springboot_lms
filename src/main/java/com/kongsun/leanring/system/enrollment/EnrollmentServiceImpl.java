@@ -64,12 +64,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             payment.setEnrollment(enrollment);
             payment.setAmount(request.getAmount());
             payment.setDate(request.getDate());
+            payment.setReceiver(request.getReceiver());
+            payment.setMethod(request.getMethod());
             paymentService.create(payment);
         }
-        EnrollmentResponse enrollmentResponse = enrollmentMapper.toEnrollmentResponse(enrollment);
-        System.out.println("Test sucess.");
 
-        return enrollmentResponse;
+        return enrollmentMapper.toEnrollmentResponse(enrollment);
     }
 
     @Override
