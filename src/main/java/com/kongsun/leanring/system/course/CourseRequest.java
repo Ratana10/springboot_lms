@@ -18,11 +18,14 @@ public class CourseRequest {
     @PositiveOrZero(message = "Salary must be positive or zero")
     private BigDecimal price;
 
+    private BigDecimal discount;
+
     private String image;
 
     @NotNull(message = "categoryId is required")
     private Long categoryId;
 
     private Long teacherId;
+
 
 }

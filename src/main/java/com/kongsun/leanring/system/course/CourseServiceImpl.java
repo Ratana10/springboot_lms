@@ -52,6 +52,7 @@ public class CourseServiceImpl implements CourseService {
         byId.setName(course.getName());
         byId.setDescription(course.getDescription());
         byId.setPrice(course.getPrice());
+        byId.setDiscount(course.getDiscount());
         byId.setImage(course.getImage());
         byId.setCategory(course.getCategory());
         byId.setTeacher(course.getTeacher());

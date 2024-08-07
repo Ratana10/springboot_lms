@@ -38,6 +38,11 @@ public class Course extends AuditingEntity {
     private BigDecimal price = BigDecimal.ZERO;
 
     @Column(
+            name = "cou_discount"
+    )
+    private BigDecimal discount = BigDecimal.ZERO;
+
+    @Column(
             name = "cou_image"
     )
     private String image;

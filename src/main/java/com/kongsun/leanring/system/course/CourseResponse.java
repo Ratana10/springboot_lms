@@ -16,6 +16,8 @@ public class CourseResponse {
 
     private BigDecimal price;
 
+    private BigDecimal discount;
+
     private String image;
 
     private Long categoryId;
