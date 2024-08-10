@@ -46,10 +46,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @CacheEvict(allEntries = true)
     public Schedule update(Long id, Schedule schedule) {
         Schedule byId = getById(id);
-        byId.setDay(schedule.getDay());
+        byId.setDescription(schedule.getDescription());
         byId.setStartTime(schedule.getStartTime());
         byId.setEndTime(schedule.getEndTime());
         byId.setCourse(schedule.getCourse());
+        byId.setStartDate(schedule.getStartDate());
+        byId.setEndDate(schedule.getEndDate());
+        byId.setTotalTime(schedule.getTotalTime());
         return scheduleRepository.save(byId);
     }
 

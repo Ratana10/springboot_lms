@@ -16,10 +16,13 @@ create table teachers
     tea_code varchar(7) NULL,
     tea_firstname varchar(10),
     tea_lastname varchar(20),
-    gender varchar(20),
-    salary DECIMAL(10, 2),
-    hire_date DATE,
-    stop_work BOOLEAN NOT NULL DEFAULT false,
+    tea_gender varchar(20),
+    tea_email varchar(20) NULL,
+    tea_phone varchar(20) NULL,
+    tea_address varchar(50) NULL,
+    tea_salary DECIMAL(10, 2) NULL,
+    tea_hire_date DATE,
+    tea_stop_work BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP,
     created_by BIGINT NULL,
@@ -50,6 +53,7 @@ create table courses
     cou_name varchar(20),
     cou_description varchar(255),
     cou_price decimal(10, 2),
+    cou_discount decimal(10, 2),
     cou_image  varchar(255) NULL,
     cat_id  bigint
     constraint fk_course_category
@@ -67,9 +71,12 @@ create table courses
 create table schedules
 (
     sch_id  bigserial   primary KEY,
-    day varchar(10),
-    start_time TIME,
-    end_time TIME,
+    sch_description  varchar(255) NOT NULL,
+    sch_start_time TIME,
+    sch_end_time TIME,
+    sch_start_date DATE,
+    sch_end_date DATE,
+    sch_total_time DECIMAL(10, 2),
     cou_id  bigint
     constraint fk_schedule_course
     references courses,

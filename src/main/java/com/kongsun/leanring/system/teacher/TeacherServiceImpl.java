@@ -80,6 +80,9 @@ public class TeacherServiceImpl implements TeacherService {
             //get only teacher working
             spec = spec.and(TeacherSpec.isStopWork(false));
         }
+        if(params.containsKey("all")){
+            return new PageDTO(teacherRepository.findAll());
+        }
 
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
         Page<Teacher> studentPage = teacherRepository.findAll(spec, pageable);

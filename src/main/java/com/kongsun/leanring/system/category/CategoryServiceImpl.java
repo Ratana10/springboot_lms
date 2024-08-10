@@ -58,6 +58,9 @@ public class CategoryServiceImpl implements CategoryService {
         if (params.containsKey("name")) {
             spec = CategorySpec.containName(params.get("name"));
         }
+        if(params.containsKey("all")){
+            return new PageDTO(categoryRepository.findAll());
+        }
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
         return new PageDTO(categoryRepository.findAll(spec, pageable));
     }

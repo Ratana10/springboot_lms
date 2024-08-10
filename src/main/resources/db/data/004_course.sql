@@ -2,6 +2,7 @@ INSERT INTO courses(
     cou_name,
     cou_description,
     cou_price,
+    cou_discount,
     cou_image,
     cat_id,
     tea_id,
@@ -12,7 +13,7 @@ INSERT INTO courses(
     deleted
 )
 VALUES
-    ('NextJs', 'null', 50.00, 'null', 1, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE),
-    ('Agular', 'null', 100.00, 'null', 1, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE),
-    ('Spring Boot', 'null', 12.00, 'null', 3, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE),
-    ('Solving Problem', 'null', 25.00, 'null', 4, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE)
+    ('NextJs', 'NextJs description', 50.00, 10, 'null', 1, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE),
+    ('Agular', 'Agular description', 100.00, 20, 'null', 1, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE),
+    ('Spring Boot', 'Spring description', 12.00, 0,'null', 3, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE),
+    ('Solving Problem', 'Problem description', 25.00, 0, 'null', 4, 1, CURRENT_TIMESTAMP, null, 1, null, FALSE)

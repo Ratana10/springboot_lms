@@ -2,6 +2,7 @@ package com.kongsun.leanring.system.teacher;
 
 import com.kongsun.leanring.system.auditing.AuditingEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,24 +43,41 @@ public class Teacher extends AuditingEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(
-            name = "gender",
+            name = "tea_gender",
             nullable = false
     )
     private Gender gender = Gender.MALE;
 
     @Column(
-            name = "salary",
+            name = "tea_salary",
             nullable = false
     )
     private BigDecimal salary = BigDecimal.ZERO;
 
     @Column(
-            name = "hire_date"
+            name = "tea_hire_date"
     )
     private LocalDate hireDate;
 
     @Column(
-            name = "stop_work"
+            name = "tea_email"
+    )
+    @Email
+    private String email;
+
+    @Column(
+            name = "tea_phone",
+            length = 12
+    )
+    private String phone;
+
+    @Column(
+            name = "tea_address"
+    )
+    private String address;
+
+    @Column(
+            name = "tea_stop_work"
     )
     private boolean stopWork = false;
 

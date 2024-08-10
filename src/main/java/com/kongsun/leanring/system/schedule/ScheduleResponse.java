@@ -3,6 +3,8 @@ package com.kongsun.leanring.system.schedule;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -10,11 +12,17 @@ import java.time.LocalTime;
 public class ScheduleResponse {
     private Long id;
 
-    private Day day;
+    private String description;
 
     private LocalTime startTime;
 
     private LocalTime endTime;
 
     private Long courseId;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+
+    private BigDecimal totalTime;
 }

@@ -25,6 +25,12 @@ public class TeacherRequest {
 
     private BigDecimal salary = BigDecimal.ZERO;
 
+    private String email;
+
+    private String phone;
+
+    private String address;
+
     @NotNull(message = "hireDate is required")
     private LocalDate hireDate;
 

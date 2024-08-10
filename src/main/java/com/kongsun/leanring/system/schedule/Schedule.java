@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -19,23 +21,37 @@ public class Schedule extends AuditingEntity {
     private Long id;
 
     @Column(
-            name = "day",
+            name = "sch_description",
             nullable = false
     )
-    @Enumerated(EnumType.STRING)
-    private Day day;
+    private String description;
 
     @Column(
-            name = "start_time",
+            name = "sch_start_time",
             nullable = false
     )
     private LocalTime startTime;
 
     @Column(
-            name = "end_time",
+            name = "sch_end_time",
             nullable = false
     )
     private LocalTime endTime;
+
+    @Column(
+            name = "sch_start_date"
+    )
+    private LocalDate startDate;
+
+    @Column(
+            name = "sch_end_date"
+    )
+    private LocalDate endDate;
+
+    @Column(
+            name = "sch_total_time"
+    )
+    private BigDecimal totalTime;
 
     @ManyToOne
     @JoinColumn(

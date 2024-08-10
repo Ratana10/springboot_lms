@@ -6,6 +6,8 @@ import com.kongsun.leanring.system.enrollment.Enrollment;
 import com.kongsun.leanring.system.enrollment.EnrollmentRepository;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
+import com.kongsun.leanring.system.student.Student;
+import com.kongsun.leanring.system.student.StudentSpec;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -14,6 +16,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -74,8 +77,14 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Cacheable
     public PageDTO getAll(Map<String, String> params) {
+        Specification<Payment> spec = Specification.where(null);
+
+        if(params.containsKey("search")){
+            spec = spec.and(PaymentSpec.containLastname(params.get("search")))
+                    .or(PaymentSpec.containFirstname(params.get("search")));
+        }
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
-        return new PageDTO(paymentRepository.findAll(pageable));
+        return new PageDTO(paymentRepository.findAll(spec, pageable));
     }
 
     @Override
