@@ -49,7 +49,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
 
         BigDecimal total = enrollment.getCourses().stream()
-                .map(Course::getPrice)
+                .map(course -> {
+                    BigDecimal discount = course.getDiscount() != null ? course.getDiscount() : BigDecimal.ZERO;
+                    BigDecimal discountPercentage = discount.divide(BigDecimal.valueOf(100));
+                    BigDecimal discountAmount = course.getPrice().multiply(discountPercentage);
+                    return course.getPrice().subtract(discountAmount);
+                })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         enrollment.setTotal(total);
