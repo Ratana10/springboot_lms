@@ -4,6 +4,7 @@ import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
+import com.kongsun.leanring.system.student.StudentSpec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -25,9 +26,18 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     @CacheEvict(allEntries = true)
     public Teacher create(Teacher teacher) {
-        if(teacherRepository.existsByCode(teacher.getCode())){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Code already exists");
+        if(teacher.getPhone() != null && !teacher.getPhone().isEmpty()){
+            if(teacherRepository.exists(TeacherSpec.hasPhone(teacher.getPhone()))){
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+            }
         }
+
+        if(teacher.getEmail() != null && !teacher.getEmail().isEmpty()){
+            if(teacherRepository.exists(TeacherSpec.hasEmail((teacher.getEmail())))){
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+            }
+        }
+
         return teacherRepository.save(teacher);
     }
 
@@ -42,12 +52,26 @@ public class TeacherServiceImpl implements TeacherService {
     @CacheEvict(allEntries = true)
     public Teacher update(Long id, Teacher teacher) {
         Teacher byId = getById(id);
-        if(teacherRepository.existsByCode(teacher.getCode())){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Code already exists");
+
+        if (teacher.getPhone() != null && !teacher.getPhone().isEmpty()) {
+            boolean phoneExists = teacherRepository.exists(TeacherSpec.hasPhoneExcludingId(teacher.getPhone(), id));
+            if (phoneExists) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+            }
         }
+        if (teacher.getEmail() != null && !teacher.getEmail().isEmpty()) {
+            boolean existsEmail = teacherRepository.exists(TeacherSpec.hasEmailExcludingId(teacher.getEmail(), id));
+            if(existsEmail){
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+            }
+        }
+
         byId.setCode(teacher.getCode());
         byId.setFirstname(teacher.getFirstname());
         byId.setLastname(teacher.getLastname());
+        byId.setEmail(teacher.getEmail());
+        byId.setPhone(teacher.getPhone());
+        byId.setAddress(teacher.getAddress());
         byId.setGender(teacher.getGender());
         byId.setSalary(teacher.getSalary());
         byId.setHireDate(teacher.getHireDate());

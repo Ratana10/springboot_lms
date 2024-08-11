@@ -21,8 +21,6 @@ public class Teacher extends AuditingEntity {
 
     @Column(
             name = "tea_code",
-            nullable = false,
-            unique = true,
             length = 50
     )
     private String code;
