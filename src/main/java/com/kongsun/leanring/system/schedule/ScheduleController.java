@@ -23,7 +23,7 @@ public class ScheduleController {
 
 
     @GetMapping
-    public ResponseEntity<PageDTO> getAll(Map<String, String> params) {
+    public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
         return ResponseEntity
                 .ok(scheduleService.getAll(params));
     }

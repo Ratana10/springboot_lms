@@ -4,6 +4,7 @@ import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PageUtil;
 import com.kongsun.leanring.system.common.PaginationUtil;
 import com.kongsun.leanring.system.course.CourseService;
+import com.kongsun.leanring.system.course.CourseSpec;
 import com.kongsun.leanring.system.exception.ApiException;
 import com.kongsun.leanring.system.exception.ErrorResponse;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -66,8 +68,17 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Cacheable
     public PageDTO getAll(Map<String,String> params) {
+        Specification<Schedule> spec = Specification.where(null);
+
+        if(params.containsKey("search")){
+            spec = spec.and(ScheduleSpec.hasCourseName(params.get(("search"))));
+            System.out.println("Search" + params.get(("search")));
+
+        }
+
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
-        return new PageDTO(scheduleRepository.findAll(pageable));
+
+        return new PageDTO(scheduleRepository.findAll(spec, pageable));
     }
 
     @Override

@@ -124,6 +124,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public List<CourseResponse> getStudentEnrollmentCourses(Long studentId) {
         studentService.getById(studentId);
         List<Enrollment> enrollments = enrollmentRepository.findByStudentId(studentId);
+        System.out.println("Enrollment" + enrollments);
         return enrollments.stream()
                 .flatMap(enr -> enr.getCourses().stream())
                 .distinct()
