@@ -24,11 +24,15 @@ public class StudentSpec {
     }
 
     public static Specification<Student> hasPhoneExcludingId(String phone, Long id) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.and(
-                        criteriaBuilder.equal(root.get("phone"), phone),
-                        criteriaBuilder.notEqual(root.get("id"), id)
-                );
+        return (root, query, criteriaBuilder) -> {
+            if(phone == null || phone.isEmpty()){
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("phone"), phone),
+                    criteriaBuilder.notEqual(root.get("id"), id)
+            );
+        };
     }
 
     public static Specification<Student> containGender(String gender) {
@@ -47,11 +51,16 @@ public class StudentSpec {
     }
 
     public static Specification<Student> hasEmailExcludingId(String email, Long id) {
-        return (root, query, criteriaBuilder) ->
-                criteriaBuilder.and(
-                        criteriaBuilder.equal(root.get("email"), email),
-                        criteriaBuilder.notEqual(root.get("id"), id)
-                );
+        return (root, query, criteriaBuilder) -> {
+            if(email == null || email.isEmpty()){
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("email"), email),
+                    criteriaBuilder.notEqual(root.get("id"), id)
+            );
+        };
+
     }
 
 

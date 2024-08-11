@@ -29,13 +29,18 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @CacheEvict(allEntries = true)
     public Student create(Student student) {
-        if(studentRepository.exists(StudentSpec.hasPhone(student.getPhone()))){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+        if(student.getPhone() != null && !student.getPhone().isEmpty()){
+            if(studentRepository.exists(StudentSpec.hasPhone(student.getPhone()))){
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+            }
         }
 
-        if(studentRepository.exists(StudentSpec.hasEmail((student.getEmail())))){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+        if(student.getEmail() != null && !student.getEmail().isEmpty()){
+            if(studentRepository.exists(StudentSpec.hasEmail((student.getEmail())))){
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+            }
         }
+
         return studentRepository.save(student);
     }
 
@@ -50,14 +55,17 @@ public class StudentServiceImpl implements StudentService {
     @CacheEvict(allEntries = true)
     public Student update(Long id, Student student) {
         //before update check phone
-        boolean exists = studentRepository.exists(StudentSpec.hasPhoneExcludingId(student.getPhone(), id));
-        if(exists){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+        if (student.getPhone() != null && !student.getPhone().isEmpty()) {
+            boolean phoneExists = studentRepository.exists(StudentSpec.hasPhoneExcludingId(student.getPhone(), id));
+            if (phoneExists) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Phone already exists");
+            }
         }
-
-        boolean existsEmail = studentRepository.exists(StudentSpec.hasEmailExcludingId(student.getEmail(), id));
-        if(existsEmail){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+        if (student.getEmail() != null && !student.getEmail().isEmpty()) {
+            boolean existsEmail = studentRepository.exists(StudentSpec.hasEmailExcludingId(student.getEmail(), id));
+            if(existsEmail){
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Email already exists");
+            }
         }
 
         Student byId = getById(id);
