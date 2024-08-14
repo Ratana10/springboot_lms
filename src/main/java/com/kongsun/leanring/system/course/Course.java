@@ -58,4 +58,12 @@ public class Course extends AuditingEntity {
     @JoinColumn(name = "tea_id")
     private Teacher teacher;
 
+    public BigDecimal priceAfterDiscount() {
+        if (discount != null && discount.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal discountAmount = price.multiply(discount).divide(BigDecimal.valueOf(100));
+            return price.subtract(discountAmount);
+        }
+        return price;
+    }
+
 }
