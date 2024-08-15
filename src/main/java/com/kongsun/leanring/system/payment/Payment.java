@@ -22,11 +22,6 @@ public class Payment extends AuditingEntity {
 
     @ManyToOne
     @JoinColumn(name = "enr_id")
-    private Enrollment enrollment;
-
-
-    @ManyToOne
-    @JoinColumn(name = "enr_id_v2")
     private Enroll enroll;
 
 

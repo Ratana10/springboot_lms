@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long>,
         JpaSpecificationExecutor<Payment> {
-    Page<Payment> findByEnrollmentId(Long enrollmentId, Pageable pageable);
+    Page<Payment> findByEnrollId(Long enrollmentId, Pageable pageable);
+    List<Payment> findByEnrollId(Long enrollId);
 }

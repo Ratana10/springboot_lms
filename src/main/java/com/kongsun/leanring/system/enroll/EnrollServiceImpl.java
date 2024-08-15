@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.UNPAID;
@@ -67,8 +68,19 @@ public class EnrollServiceImpl implements EnrollService {
     }
 
     @Override
+    public List<Enroll> getByStudentId(Long studentId) {
+        return enrollRepository.findByStudentId(studentId);
+    }
+
+    @Override
     public void deleteById(Long id) {
         getById(id);
+        List<Payment> payments = paymentService.findByEnrollId(id);
+
+        if(payments != null && !payments.isEmpty()){
+            System.out.println("Payments"+ payments);
+            paymentService.deletePayments(payments);
+        }
         enrollRepository.deleteById(id);
     }
 

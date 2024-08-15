@@ -1,6 +1,7 @@
 package com.kongsun.leanring.system.student;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.enroll.EnrollService;
 import com.kongsun.leanring.system.enrollment.EnrollmentService;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ public class StudentController {
     private final StudentService studentService;
     private final StudentMapper studentMapper;
     private final EnrollmentService enrollmentService;
+    private final EnrollService enrollService;
 
     @GetMapping
     public ResponseEntity<PageDTO> getAll(@RequestParam Map<String,String > params) {
@@ -96,6 +98,19 @@ public class StudentController {
                 .body(ApiResponse.builder()
                         .data(enrollmentService.getStudentEnrollmentCourses(studentId))
                         .message("get student enrollment courses successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+
+    }
+
+    @GetMapping("{studentId}/enrolls")
+    public ResponseEntity<ApiResponse> getEnrollByStudent(@PathVariable Long studentId) {
+        return ResponseEntity
+                .ok()
+                .body(ApiResponse.builder()
+                        .data(enrollService.getByStudentId(studentId))
+                        .message("get student enroll courses successfully")
                         .httpStatus(OK.value())
                         .build()
                 );

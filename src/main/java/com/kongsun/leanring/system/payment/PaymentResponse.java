@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 public class PaymentResponse {
     private Long id;
-    private Long enrollmentId;
+    private Long enrollId;
     private BigDecimal amount;
     private LocalDate date;
     private PaymentMethod method;

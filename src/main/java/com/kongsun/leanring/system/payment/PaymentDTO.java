@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class PaymentDTO {
-    @NotNull(message = "enrollmentId is required")
-    private Long enrollmentId;
+    @NotNull(message = "enrollId is required")
+    private Long enrollId;
 
     @PositiveOrZero(message = "amount must be positive or zero")
     @Min(value = 1L, message = "Amount must be greater than zero")

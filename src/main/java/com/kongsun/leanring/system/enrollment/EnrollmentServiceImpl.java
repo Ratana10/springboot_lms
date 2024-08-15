@@ -63,16 +63,16 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         enrollmentRepository.save(enrollment);
         // check amount
-        if (request.getAmount() != null && request.getAmount().compareTo(BigDecimal.ZERO) > 0) {
-            // make payment
-            Payment payment = new Payment();
-            payment.setEnrollment(enrollment);
-            payment.setAmount(request.getAmount());
-            payment.setDate(request.getDate());
-            payment.setReceiver(request.getReceiver());
-            payment.setMethod(request.getMethod());
-            paymentService.create(payment);
-        }
+//        if (request.getAmount() != null && request.getAmount().compareTo(BigDecimal.ZERO) > 0) {
+//            // make payment
+//            Payment payment = new Payment();
+//            payment.setEnrollment(enrollment);
+//            payment.setAmount(request.getAmount());
+//            payment.setDate(request.getDate());
+//            payment.setReceiver(request.getReceiver());
+//            payment.setMethod(request.getMethod());
+//            paymentService.create(payment);
+//        }
 
         return enrollmentMapper.toEnrollmentResponse(enrollment);
     }

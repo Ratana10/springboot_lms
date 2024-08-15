@@ -2,6 +2,10 @@ package com.kongsun.leanring.system.payment;
 
 import com.kongsun.leanring.system.common.PageDTO;
 import com.kongsun.leanring.system.common.PaginationUtil;
+import com.kongsun.leanring.system.enroll.Enroll;
+import com.kongsun.leanring.system.enroll.EnrollRepository;
+import com.kongsun.leanring.system.enroll.EnrollService;
+import com.kongsun.leanring.system.enroll.EnrollStatus;
 import com.kongsun.leanring.system.enrollment.Enrollment;
 import com.kongsun.leanring.system.enrollment.EnrollmentRepository;
 import com.kongsun.leanring.system.exception.ApiException;
@@ -32,15 +36,25 @@ import static com.kongsun.leanring.system.enrollment.EnrollmentStatus.*;
 @CacheConfig(cacheNames = "paymentsCache")
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
-    private final EnrollmentRepository enrollmentRepository;
+    private final EnrollRepository enrollRepository;
 
     @Override
     @CacheEvict(allEntries = true)
     public Payment create(Payment payment) {
-        Enrollment enrollment = payment.getEnrollment();
-        checkPaymentStatus(enrollment, payment.getAmount());
-        enrollmentRepository.save(enrollment);
+        Enroll enroll = payment.getEnroll();
+        checkPaymentStatus(enroll, payment.getAmount());
+        enrollRepository.save(enroll);
         return paymentRepository.save(payment);
+    }
+
+    @Override
+    public List<Payment> findByEnrollId(Long enrollId) {
+        return paymentRepository.findByEnrollId(enrollId);
+    }
+
+    @Override
+    public void deletePayments(List<Payment> payments) {
+        paymentRepository.deleteAll(payments);
     }
 
     @Override
@@ -54,28 +68,28 @@ public class PaymentServiceImpl implements PaymentService {
     @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         Payment payment = getById(id);
-        Enrollment enrollment = payment.getEnrollment();
+        Enroll enroll = payment.getEnroll();
 
-        BigDecimal remain = enrollment.getRemain().add(payment.getAmount());
-        enrollment.setRemain(remain);
+        BigDecimal remain = enroll.getRemain().add(payment.getAmount());
+        enroll.setRemain(remain);
 
-        if (remain.compareTo(enrollment.getTotal()) == 0) {
-            enrollment.setStatus(UNPAID);
+        if (remain.compareTo(enroll.getPrice()) == 0) {
+            enroll.setStatus(EnrollStatus.UNPAID);
 
-        } else if (remain.compareTo(enrollment.getTotal()) < 0) {
-            enrollment.setStatus(PARTIAL);
+        } else if (remain.compareTo(enroll.getPrice()) < 0) {
+            enroll.setStatus(EnrollStatus.PARTIAL);
 
-        } else if (remain.compareTo(enrollment.getTotal()) > 0) {
-            enrollment.setStatus(PAID);
+        } else if (remain.compareTo(enroll.getPrice()) > 0) {
+            enroll.setStatus(EnrollStatus.PAID);
 
         }
 
-        enrollmentRepository.save(enrollment);
+        enrollRepository.save(enroll);
         paymentRepository.deleteById(id);
     }
 
     @Override
-    @Cacheable
+    @CacheEvict(allEntries = true)
     public PageDTO getAll(Map<String, String> params) {
         Specification<Payment> spec = Specification.where(null);
 
@@ -90,9 +104,29 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Page<Payment> findByEnrollmentId(Long enrollmentId, Map<String, String > params) {
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
-        return paymentRepository.findByEnrollmentId(enrollmentId, pageable);
+        return paymentRepository.findByEnrollId(enrollmentId, pageable);
     }
 
+
+    private void checkPaymentStatus(Enroll enroll, BigDecimal paidAmount) {
+        BigDecimal cashback = BigDecimal.ZERO;
+        BigDecimal remain = checkRemain(enroll.getRemain());
+
+        if (paidAmount.compareTo(remain) < 0) {
+            remain = remain.subtract(paidAmount);
+
+            enroll.setStatus(EnrollStatus.PARTIAL);
+            enroll.setRemain(remain);
+        } else if (paidAmount.compareTo(remain) > 0) {
+            cashback = paidAmount.subtract(remain);
+
+            enroll.setStatus(EnrollStatus.PAID);
+            enroll.setRemain(BigDecimal.ZERO);
+        } else {
+            enroll.setStatus(EnrollStatus.PAID);
+            enroll.setRemain(BigDecimal.ZERO);
+        }
+    }
 
     private void checkPaymentStatus(Enrollment enrollment, BigDecimal paidAmount) {
         BigDecimal cashback = BigDecimal.ZERO;

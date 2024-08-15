@@ -8,6 +8,8 @@ import java.util.Map;
 
 public interface PaymentService {
     Payment create(Payment payment);
+    List<Payment> findByEnrollId(Long enrollId);
+    void  deletePayments(List<Payment> payments);
 
     Payment getById(Long id);
 
