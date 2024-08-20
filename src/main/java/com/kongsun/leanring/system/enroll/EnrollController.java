@@ -1,6 +1,8 @@
 package com.kongsun.leanring.system.enroll;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.course.Course;
+import com.kongsun.leanring.system.course.CourseMapper;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import com.kongsun.leanring.system.payment.Payment;
 import com.kongsun.leanring.system.payment.PaymentMapper;
@@ -28,7 +30,7 @@ public class EnrollController {
     private final EnrollMapper enrollMapper;
     private final PaymentService paymentService;
     private final PaymentMapper paymentMapper;
-
+    private final CourseMapper courseMapper;
     @PostMapping
     public ResponseEntity<ApiResponse> create(@RequestBody @Valid EnrollRequest request) {
         System.out.println("Request"+ request);
@@ -100,5 +102,19 @@ public class EnrollController {
         return ResponseEntity
                 .ok(new PageDTO(paymentPage, list));
     }
+
+    @GetMapping("/students/{studentId}")
+    public ResponseEntity<ApiResponse> getCourseByStudentId(@PathVariable Long studentId) {
+        List<Enroll> enrolls = enrollService.getEnrollsByStudentId(studentId);
+        return ResponseEntity
+                .status(OK)
+                .body(ApiResponse.builder()
+                        .data(enrolls)
+                        .message("get enroll successfully")
+                        .httpStatus(OK.value())
+                        .build()
+                );
+    }
+
 
 }

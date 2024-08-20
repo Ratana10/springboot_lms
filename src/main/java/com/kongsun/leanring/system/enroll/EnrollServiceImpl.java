@@ -10,9 +10,12 @@ import com.kongsun.leanring.system.enrollment.EnrollmentSpec;
 import com.kongsun.leanring.system.exception.ResourceNotFoundException;
 import com.kongsun.leanring.system.payment.Payment;
 import com.kongsun.leanring.system.payment.PaymentService;
+import com.kongsun.leanring.system.student.Student;
 import com.kongsun.leanring.system.student.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -103,5 +106,16 @@ public class EnrollServiceImpl implements EnrollService {
         Pageable pageable = PaginationUtil.getPageNumberAndPageSize(params);
 
         return new PageDTO(enrollRepository.findAll(spec, pageable));
+    }
+
+    @Override
+    public Page<Student> getStudentsByCourseId(Long courseId, Map<String, String> params) {
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        return enrollRepository.findStudentsByCourseId(courseId, pageable);
+    }
+
+    @Override
+    public List<Enroll> getEnrollsByStudentId(Long studentId) {
+        return enrollRepository.findEnrollByStudentId(studentId);
     }
 }

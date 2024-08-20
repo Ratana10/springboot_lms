@@ -1,6 +1,7 @@
 package com.kongsun.leanring.system.course;
 
 import com.kongsun.leanring.system.common.PageDTO;
+import com.kongsun.leanring.system.enroll.EnrollService;
 import com.kongsun.leanring.system.enrollment.EnrollmentService;
 import com.kongsun.leanring.system.exception.ApiResponse;
 import com.kongsun.leanring.system.schedule.Schedule;
@@ -33,7 +34,7 @@ public class CourseController {
     private final CourseMapper courseMapper;
     private final ScheduleMapper scheduleMapper;
     private final StudentMapper studentMapper;
-
+    private final EnrollService enrollService;
 
     @GetMapping
     public ResponseEntity<PageDTO> getAll(@RequestParam Map<String, String> params) {
@@ -140,7 +141,10 @@ public class CourseController {
 
     @GetMapping("{courseId}/students")
     public ResponseEntity<PageDTO> getStudentByCourse(@PathVariable Long courseId, @RequestParam Map<String, String> params) {
-        Page<Student> studentPage = enrollmentService.getStudentByCourse(courseId, params);
+//        Page<Student> studentPage = enrollmentService.getStudentByCourse(courseId, params);
+//        List<StudentResponse> list = studentPage.stream().map(studentMapper::toStudentResponse).toList();
+
+        Page<Student> studentPage = enrollService.getStudentsByCourseId(courseId, params);
         List<StudentResponse> list = studentPage.stream().map(studentMapper::toStudentResponse).toList();
         return ResponseEntity
                 .ok(new PageDTO(studentPage, list));
